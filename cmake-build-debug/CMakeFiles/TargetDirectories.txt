@@ -1,0 +1,3 @@
+C:/Users/Chen Yining/CLionProjects/OS/cmake-build-debug/CMakeFiles/OS.dir
+C:/Users/Chen Yining/CLionProjects/OS/cmake-build-debug/CMakeFiles/edit_cache.dir
+C:/Users/Chen Yining/CLionProjects/OS/cmake-build-debug/CMakeFiles/rebuild_cache.dir

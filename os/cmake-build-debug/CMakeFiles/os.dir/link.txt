@@ -1,0 +1,3 @@
+C:\Users\Vegetable\AppData\Local\JetBrains\Toolbox\apps\CLion\ch-0\211.7142.21\bin\cmake\win\bin\cmake.exe -E rm -f CMakeFiles\os.dir/objects.a
+D:\MinGW\mingw64\bin\ar.exe cr CMakeFiles\os.dir/objects.a @CMakeFiles\os.dir\objects1.rsp
+D:\MinGW\mingw64\bin\g++.exe -g -Wl,--whole-archive CMakeFiles\os.dir/objects.a -Wl,--no-whole-archive -o os.exe -Wl,--out-implib,libos.dll.a -Wl,--major-image-version,0,--minor-image-version,0 @CMakeFiles\os.dir\linklibs.rsp

@@ -6,41 +6,9 @@
 
 #IncludeRegexTransform: 
 
-C:/Users/Chen Yining/CLionProjects/OS/os/GODNING.h
-string
--
-
-C:/Users/Chen Yining/CLionProjects/OS/os/INode.h
-GODNING.h
-C:/Users/Chen Yining/CLionProjects/OS/os/GODNING.h
-
 C:/Users/Chen Yining/CLionProjects/OS/os/main.cpp
 bits/stdc++.h
 -
-memory.h
-C:/Users/Chen Yining/CLionProjects/OS/os/memory.h
-INode.h
-C:/Users/Chen Yining/CLionProjects/OS/os/INode.h
-user.cpp
-C:/Users/Chen Yining/CLionProjects/OS/os/user.cpp
-
-C:/Users/Chen Yining/CLionProjects/OS/os/memory.h
-bits/stdc++.h
--
-GODNING.h
-C:/Users/Chen Yining/CLionProjects/OS/os/GODNING.h
-
-C:/Users/Chen Yining/CLionProjects/OS/os/user.cpp
-iostream
--
-fstream
--
-vector
--
-string
--
-INode.h
-C:/Users/Chen Yining/CLionProjects/OS/os/INode.h
 users.txt
 C:/Users/Chen Yining/CLionProjects/OS/os/users.txt
 

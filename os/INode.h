@@ -76,7 +76,7 @@ int INode::CaculateFileSize(const string& filename){
     return t.size();
 }
 
-
+//i结点表，存储在内存中
 class INodeList{
 public:
     //i结点表，在初次进入程序之后获取i结点表

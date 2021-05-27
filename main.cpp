@@ -5,7 +5,8 @@
 
 using namespace std;
 
-int main() {
+int main()
+{
 //    MixIndex index;
 //    for(int i = 1; i <= 16; i++)
 //        index.addIndex(i);
@@ -20,8 +21,8 @@ int main() {
 //    cout << group->size() << endl;
 //    cout << group->get() << endl;
 
-    SuperGroup* sg = new SuperGroup;
-    sg->init();
-    sg->show();
-    return 0;
+//    SuperGroup* sg = new SuperGroup;
+//    sg->init();
+//    sg->show();
+	return 0;
 }

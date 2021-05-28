@@ -5,6 +5,22 @@
 
 // 构造函数
 NormalIndex::NormalIndex(int sign):sign(sign){}
+// 复制构造函数
+NormalIndex::NormalIndex(const NormalIndex& ano)
+:sign(ano.sign)
+, indexSize(ano.indexSize)
+, indexes(ano.indexes)
+, indexTables(ano.indexTables)
+{}
+// 重载等号运算符
+NormalIndex& NormalIndex::operator=(const NormalIndex& ano)
+{
+    sign = ano.sign;
+    indexSize = ano.indexSize;
+    indexes = ano.indexes;
+    indexTables = ano.indexTables;
+    return *this;
+}
 
 // 获取第n个索引
 int NormalIndex::getIndex(int n)
@@ -119,10 +135,37 @@ void NormalIndex::show()
         cout << indexes[i] << " ";
     cout << "\n";
 }
+void NormalIndex::clear()
+{
+    indexTables.clear();
+    indexes.clear();
+    indexSize = 0;
+}
+vector<int> NormalIndex::getIndexes()
+{
+    return indexes;
+}
 
 // 构造函数
 MixIndex::MixIndex(): oneIndirectIndex(0), twoIndirectIndex(1), threeIndirectIndex(2){}
-
+//复制构造函数
+MixIndex::MixIndex(MixIndex& ano)
+:indexSize(ano.indexSize)
+, indexes(ano.indexes)
+, oneIndirectIndex(ano.oneIndirectIndex)
+, twoIndirectIndex(ano.twoIndirectIndex)
+, threeIndirectIndex(ano.threeIndirectIndex)
+{}
+// 重载等号运算符
+MixIndex& MixIndex::operator=(const MixIndex& ano)
+{
+    indexSize = ano.indexSize;
+    indexes = ano.indexes;
+    oneIndirectIndex = ano.oneIndirectIndex;
+    twoIndirectIndex = ano.twoIndirectIndex;
+    threeIndirectIndex = ano.threeIndirectIndex;
+    return *this;
+}
 // 添加一个索引
 bool MixIndex::addIndex(int id)
 {
@@ -198,6 +241,50 @@ bool MixIndex::addThreeIndirectIndex(int id)
 int MixIndex::size() const
 {
     return indexSize;
+}
+// 获取所有索引编号
+vector<int> MixIndex::getIndexes()
+{
+    vector<int> t;
+    // 获取直接索引编号
+    for(int i = 0; i < min(indexSize, BASIC_IDX); i++)
+        t.push_back(indexes[i]);
+    // 获取一次间接索引编号
+    if(indexSize >= BASIC_IDX)
+    {
+        vector<int> t1 = oneIndirectIndex.getIndexes();
+        for(int i = 0; i < t1.size(); i++)
+            t.push_back(t1[i]);
+    }
+    // 获取两次间接索引编号
+    if(indexSize >= BASIC_IDX + IDXT_SIZE)
+    {
+        int n = twoIndirectIndex.size();
+        for(int i = 0; i < n; i++)
+        {
+            vector<int> t1 = twoIndirectIndex.getNxtIndex(i).getIndexes();
+            for(int j = 0; j < t1.size(); j++)
+                t.push_back(t1[j]);
+        }
+
+    }
+    // 获取三次间接索引编号
+    if(indexSize >= BASIC_IDX + IDXT_SIZE + ONE_IDXT_SIZE)
+    {
+        int n = threeIndirectIndex.size();
+        for(int i = 0; i < n; i++)
+        {
+            int m = threeIndirectIndex.getNxtIndex(i).size();
+            for(int j = 0; j < m; j++)
+            {
+                vector<int> t1 = threeIndirectIndex.getNxtIndex(i).getNxtIndex(j).getIndexes();
+                for(int k = 0; k < t1.size(); k++)
+                    t.push_back(t1[k]);
+            }
+
+        }
+    }
+    return t;
 }
 
 // 展示信息
@@ -294,4 +381,14 @@ bool MixIndex::dropThreeInDirectIndex()
     if((n + 1) % ONE_IDXT_SIZE == 1) // 如果删除的正好是二次间址索引块的最后一个索引
         threeIndirectIndex.dropNxtIndex(); // 把这个二次间址索引块也删除
     return true;
+}
+
+//清空
+void MixIndex::clear()
+{
+    indexes.clear();
+    oneIndirectIndex.clear();
+    twoIndirectIndex.clear();
+    threeIndirectIndex.clear();
+    indexSize = 0;
 }

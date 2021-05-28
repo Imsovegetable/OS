@@ -13,14 +13,17 @@ using namespace std;
 class NormalIndex{
 private:
     const int indexCapacity = IDXT_SIZE;
-    const int sign;
+    int sign;
     int indexSize = 0;
     vector<int> indexes;
     vector<NormalIndex> indexTables;
 
 public:
-    NormalIndex(int sign);
+    NormalIndex(int sign = 0);
 
+    NormalIndex(const NormalIndex&);
+
+    NormalIndex& operator=(const NormalIndex&);
     //作为末级索引的功能
     // 获取第n个索引
     int getIndex(int n);
@@ -46,6 +49,10 @@ public:
     int check() const;
     // 显示辅助信息
     void show();
+    // 清空
+    void clear();
+    // 获取所有索引节点
+    vector<int> getIndexes();
 };
 
 
@@ -78,6 +85,10 @@ private:
 
 public:
     MixIndex();
+
+    MixIndex(MixIndex&);
+
+    MixIndex& operator=(const MixIndex&);
     // 添加一个索引
     bool addIndex(int id);
     // 返回索引数量
@@ -86,8 +97,10 @@ public:
     void show();
     // 删除一个索引
     bool dropIndex();
-
-
+    // 清空信息
+    void clear();
+    // 获取所有索引
+    vector<int> getIndexes();
 };
 
 

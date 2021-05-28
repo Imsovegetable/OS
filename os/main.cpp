@@ -4,6 +4,7 @@
 //#include "assistant.cpp"
 #include "INode.h"
 #include "user.cpp"
+#include "fileSystem.h"
 using namespace std;
 
 int main() {

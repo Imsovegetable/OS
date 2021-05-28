@@ -18,21 +18,22 @@ private:
     int iNodeNum[INODET_IN_RAM];
 
 public:
+    // 构造函数
     INodeListInRam();
-
+    // 获取空的内存i结点
     int getFreeNode();
-
+    // 加载一个i结点
     bool loadNode(INode A, int id);
-
+    // 释放一个i结点
     INode freeNode(int id);
-
+    // 寻找id所对应的内存i结点的下标
     int searchNode(int id);
 
     //xxx readSomeInfo(int id);
 
-    bool updateInfo(int id); // 也可以考虑用复制构造函数更新
+    bool updateInfo(int id);
 
-    bool saveInodes(); // 需要调磁盘Inode表的函数 或许要集成到文件系统里 而不是这里
+    bool saveInodes();
 };
 
 class FileOpenItem{

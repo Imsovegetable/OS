@@ -16,6 +16,9 @@ int main()
 //    for(int i= 1; i <= 9; i++)
 //        index.dropIndex();
 //    index.show();
+//    vector<int> t = index.getIndexes();
+//    for(int i = 0; i < t.size(); i++)
+//        cout << t[i] << " ";
 
 //    GroupLeader* group = new GroupLeader;
 //    cout << group->size() << endl;
@@ -39,7 +42,8 @@ int main()
 //    cout << d.getItem("cynzdsdsb.txt") << endl;
 //    cout << d.size() << endl;
 //    d.show();
-    string n = "1.txt";
-    cout << statictic(n);
+
+//    string n = "1.txt";
+//    cout << statictic(n);
 	return 0;
 }

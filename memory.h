@@ -51,7 +51,8 @@ public:
     void show();
     // 清空
     void clear();
-
+    // 获取所有索引节点
+    vector<int> getIndexes();
 };
 
 
@@ -98,6 +99,8 @@ public:
     bool dropIndex();
     // 清空信息
     void clear();
+    // 获取所有索引
+    vector<int> getIndexes();
 };
 
 

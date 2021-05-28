@@ -12,7 +12,10 @@
 #define TWO_IDXT_SIZE (ONE_IDXT_SIZE*IDXT_SIZE) // 三次间接索引表大小
 #define MIX_IDXT_SIZE (BASIC_IDX+IDXT_SIZE+ONE_IDXT_SIZE+TWO_IDXT_SIZE) // mix index table size 混合索引表大小
 
-#define GROUP_SIZE 50
-#define TOTAL_GROUP_SIZE 500
+#define GROUP_SIZE 50 // 成组链接法每一组的大小
+#define TOTAL_GROUP_SIZE 500 // 成组链接法初始化时的总大小
+
+#define INODE_NUM 128    //i结点个数
+#define INODET_IN_RAM 64 // 内存中i结点表可容纳i结点的最大数量
 
 #endif //OS_GODNING_H

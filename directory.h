@@ -1,33 +1,52 @@
 //
-// Created by æ—§åŸç­±é›¨ on 2021/5/27.
+// Created by ¾É³ÇóãÓê on 2021/5/27.
 //
+#include <bits/stdc++.h>
 
 #ifndef OS_DIRECTORY_H
 #define OS_DIRECTORY_H
 
-#include <bits/stdc++.h>
+
 using namespace std;
 
 class Directory{
 private:
-    //ç›®å½•è¡¨
+    //Ä¿Â¼±í
     map<string, int> directory;
 
 public:
-    // æ·»åŠ ä¸€ä¸ªç›®å½•é¡¹
+    //
+    Directory();
+
+    Directory(Directory&);
+
+    Directory& operator=(const Directory&);
+    // Ìí¼ÓÒ»¸öÄ¿Â¼Ïî
     bool addItem(string filename, int id);
-    // åˆ é™¤ä¸€ä¸ªç›®å½•é¡¹
+    // É¾³ıÒ»¸öÄ¿Â¼Ïî
     bool deleteItem(string filename);
-    // æ£€æŸ¥æŸä¸€ä¸ªç›®å½•é¡¹æ˜¯å¦å­˜åœ¨
+    // ¼ì²éÄ³Ò»¸öÄ¿Â¼ÏîÊÇ·ñ´æÔÚ
     bool checkItem(string filename);
-    // è·å–æŸä¸ªç›®å½•é¡¹çš„iç»“ç‚¹å·
+    // »ñÈ¡Ä³¸öÄ¿Â¼ÏîµÄi½áµãºÅ
     int getItem(string filename);
-    // ç›®å½•é¡¹é‡å‘½å
+    // Ä¿Â¼ÏîÖØÃüÃû
     bool setFileName(string filename, string newName);
-    // è¿”å›å¤§å°
+    // ·µ»Ø´óĞ¡
     int size();
-    // ç›®å½•åˆå§‹åŒ–
+    // Ä¿Â¼³õÊ¼»¯
     void init(int idSelf, int idParent);
+    // Çå¿ÕÄ¿Â¼
+    void clear();
+    // ÏÔÊ¾ĞÅÏ¢
+    void show()
+    {
+        cout << "\n¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª\n";
+        for(auto& it: directory)
+            cout << it.first << " " << it.second << endl;
+        cout << "¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª\n";
+    }
 };
+
+extern Directory* current_dir;
 
 #endif //OS_DIRECTORY_H

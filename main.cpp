@@ -1,7 +1,9 @@
 
 #include <bits/stdc++.h>
-//#include "memory.h"
+#include "memory.h"
 #include "gcm.h"
+#include "directory.h"
+#include "help.h"
 
 using namespace std;
 
@@ -24,5 +26,20 @@ int main()
 //    SuperGroup* sg = new SuperGroup;
 //    sg->init();
 //    sg->show();
+
+//    Directory d;
+//    d.show();
+//    d.init(3, 4);
+//    d.show();
+//    d.addItem("cyndsb.txt", 1);
+//    d.addItem("cynzdsdsb.txt", 2);
+//    d.show();
+//    d.deleteItem("cyndsb.txt");
+//    cout << d.checkItem("cynzdsdsb.txt") << endl;
+//    cout << d.getItem("cynzdsdsb.txt") << endl;
+//    cout << d.size() << endl;
+//    d.show();
+    string n = "1.txt";
+    cout << statictic(n);
 	return 0;
 }

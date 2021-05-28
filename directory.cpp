@@ -1,9 +1,22 @@
 //
-// Created by æ—§åŸç­±é›¨ on 2021/5/27.
+// Created by ¾É³ÇóãÓê on 2021/5/27.
 //
 #include "directory.h"
 
-// æ·»åŠ ä¸€ä¸ªç›®å½•é¡¹
+Directory* current_dir;
+
+Directory::Directory(){}
+
+Directory::Directory(Directory& ano)
+: directory(ano.directory)
+{}
+
+Directory& Directory::operator=(const Directory & ano)
+{
+    directory = ano.directory;
+    return *this;
+}
+// Ìí¼ÓÒ»¸öÄ¿Â¼Ïî
 bool Directory::addItem(string filename, int id)
 {
     if(directory[filename] != 0)
@@ -13,7 +26,7 @@ bool Directory::addItem(string filename, int id)
     return true;
 }
 
-// åˆ é™¤ä¸€ä¸ªç›®å½•é¡¹
+// É¾³ıÒ»¸öÄ¿Â¼Ïî
 bool Directory::deleteItem(string filename)
 {
     if(directory[filename] == 0)
@@ -23,13 +36,18 @@ bool Directory::deleteItem(string filename)
     return true;
 }
 
-// æ£€æŸ¥æŸä¸€ä¸ªç›®å½•é¡¹æ˜¯å¦å­˜åœ¨
+//Çå¿ÕÄ¿Â¼
+void Directory::clear()
+{
+    directory.clear();
+}
+// ¼ì²éÄ³Ò»¸öÄ¿Â¼ÏîÊÇ·ñ´æÔÚ
 bool Directory::checkItem(string filename)
 {
     return directory[filename] != 0;
 }
 
-// è·å–æŸä¸ªç›®å½•é¡¹çš„iç»“ç‚¹å·
+// »ñÈ¡Ä³¸öÄ¿Â¼ÏîµÄi½áµãºÅ
 int Directory::getItem(string filename)
 {
     if(directory[filename] == 0)
@@ -38,7 +56,7 @@ int Directory::getItem(string filename)
         return directory[filename];
 }
 
-// ç›®å½•é¡¹é‡å‘½å
+// Ä¿Â¼ÏîÖØÃüÃû
 bool Directory::setFileName(string filename, string newName)
 {
     if(directory[filename] == 0 || directory[newName] != 0)
@@ -51,13 +69,13 @@ bool Directory::setFileName(string filename, string newName)
     }
 }
 
-// è¿”å›å¤§å°
+// ·µ»Ø´óĞ¡
 int Directory::size()
 {
     return directory.size();
 }
 
-// ç›®å½•åˆå§‹åŒ–
+// Ä¿Â¼³õÊ¼»¯
 void Directory::init(int idSelf, int idParent)
 {
     directory["."] = idSelf;

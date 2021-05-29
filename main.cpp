@@ -5,21 +5,30 @@
 #include "directory.h"
 #include "help.h"
 #include "fileSys.h"
+#include "user.h"
+#include "inode.h"
 
 using namespace std;
 
 int main()
 {
-    MixIndex index;
-    for(int i = 1; i <= 16; i++)
-        index.addIndex(i);
-    index.show();
-    for(int i= 1; i <= 9; i++)
-        index.dropIndex();
-    index.show();
-    vector<int> t = index.getIndexes();
-    for(int i = 0; i < t.size(); i++)
-        cout << t[i] << " ";
+    fileSystem sys;
+    int a = sys.superBlock.iNodeList.getFreeInodeNum();
+    INode A(1, getcurrentTime(), getcurrentTime(), "cyhdsb");
+    sys.superBlock.iNodeList.inodeList[a] = A;
+    iNodeDistributeList[a] = true;
+    //INode B(1, getcurrentTime(), getcurrentTime(), "cyhdsb");
+    sys.saveInodeInfo();
+//    MixIndex index;
+//    for(int i = 1; i <= 16; i++)
+//        index.addIndex(i);
+//    index.show();
+//    for(int i= 1; i <= 9; i++)
+//        index.dropIndex();
+//    index.show();
+//    vector<int> t = index.getIndexes();
+//    for(int i = 0; i < t.size(); i++)
+//        cout << t[i] << " ";
 
 //    GroupLeader* group = new GroupLeader;
 //    cout << group->size() << endl;

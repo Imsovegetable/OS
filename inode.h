@@ -66,6 +66,8 @@ public:
     int calculateFileSize(const string& filename);
     //判断当前用户是否有打开i结点的权限
     bool inodeIsAuthor(string username);
+    //为了存储i结点声明的转换成字符串的方法
+    string save_as_string();
 
 };
 
@@ -74,9 +76,9 @@ class INodeList{
 private:
     // 已使用的i结点数量
     int iNodeSize = 0;
+public:
     //i结点表，在初次进入程序之后获取i结点表
     INode inodeList[INODE_NUM];
-public:
     //获取空i结点号码
     int getFreeInodeNum();
     //添加新节点

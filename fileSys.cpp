@@ -42,8 +42,8 @@ void fileSystem::saveInodeInfo() {
         exit(0);
     }
     //首先存储位示图，根据位示图的值来判断是否有对应的i结点
-    for(int i=0; i<INODE_NUM; i++){
-        file<<iNodeDistributeList[i]<<endl;
+    for(bool i : iNodeDistributeList){
+        file<<i<<endl;
     }
     for(int i=0; i<INODE_NUM; i++){
         //如果位示图的是true，代表i结点存在
@@ -87,12 +87,12 @@ void fileSystem::readInodeInfo() {
     }
     string line;
     //读取位示图
-    for(int i=0; i<INODE_NUM; i++){
+    for(bool & i : iNodeDistributeList){
         file>>line;
         if(line == "1")
-            iNodeDistributeList[i] = true;
+            i = true;
         else
-            iNodeDistributeList[i] = false;
+            i = false;
     }
     for(int i=0; i<INODE_NUM; i++){
         if(iNodeDistributeList[i]){
@@ -107,19 +107,19 @@ void fileSystem::readInodeInfo() {
             file >> line;
             int s = 0;
             //记录每个文件/目录对应的索引块，首先读入一个字符串，然后对字符串中处理成对应的数字存储到i结点的索引数组中
-            for(int i=0; i<line.size(); i++){
-                if(s[i] >= '0' && s[i] <= '9'){
-                    s = s*10 + s[i] - '0';
+            for(int j=0; j<line.size(); j++){
+                if(s[j] >= '0' && s[j] <= '9'){
+                    s = s*10 + s[j] - '0';
                 }
-                else if(s[i])
+                else if(s[j])
                     superBlock.iNodeList.inodeList[i].indexT.indexes.push_back(s), s=0;
             }
             if(superBlock.iNodeList.inodeList[i].type == 1){
                 //i结点对应的type值为1代表i结点存储的是目录类型
                 file >> line;
-                int s = 0;
-                for(int i=0; i<line.size(); i++){
-                    s = s*10 + line[i]-'0';
+                s = 0;
+                for(char j : line){
+                    s = s*10 + j-'0';
                 }
                 while(s--){
                     string key;

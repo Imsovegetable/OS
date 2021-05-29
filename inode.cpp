@@ -39,8 +39,8 @@ INode::INode(int type, string setTime, string updateTime, string username)
 INode& INode::operator=(const INode& B)
 {
     this->dir = B.dir;
-//        this->updateTime = B.updateTime;
-//        this->setTime = B.setTime;
+    this->updateTime = B.updateTime;
+    this->setTime = B.setTime;
     this->diskSize = B.diskSize;
     this->fileLen = B.fileLen;
     this->username = B.username;
@@ -123,7 +123,7 @@ int INodeList::getFreeInodeNum()
 {
     for(int i=0; i<INODE_NUM; i++)
     {
-        if(iNodeDistributeList[i] == false)
+        if(!iNodeDistributeList[i])
             return i;
     }
     return -1;
@@ -146,7 +146,7 @@ void INodeList::UpdateInodeInfo(int pos) {
 }
 
 void INodeList::FreeInvalidInode(int pos) {
-    iNodeDistributeList[pos] = 0;
+    iNodeDistributeList[pos] = false;
     inodeList[pos].clear();
     iNodeSize--;
 }
@@ -156,3 +156,9 @@ INode INodeList::getInode(int id)
     return inodeList[id];
 }
 
+string INode::save_as_string() {
+    string ans;
+    ans = username + '\n' + to_string(type) + '\n' + to_string(i_Nlink) + '\n' + to_string(fileLen) + '\n'
+            + to_string(diskSize) + '\n' + setTime + '\n' + updateTime + '\n';
+    return ans;
+}

@@ -45,7 +45,8 @@ bool Users::IsExistedAuthor(const string& username)
 
 }
 
-//bool Users::fileIsAuthor(const string& filename, const string& username){
+//bool Users::fileIsAuthor(int inodeNum, const string& username){
+//
 //
 //
 //}

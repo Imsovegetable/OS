@@ -4,17 +4,17 @@
 
 #include "help.h"
 
-int statictic(string filename)
+int statistic(const string& filename)
 {
     ifstream fin(filename);
     if(!fin.is_open())
         return -1;
-    string t = "";
+    string t;
     fin >> noskipws >> t;
     return t.size();
 }
 
-string getcurrentTime()
+extern string getcurrentTime()
 {
     time_t now = time(0);
     char *dt = ctime(&now);

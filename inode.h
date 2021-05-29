@@ -41,7 +41,7 @@ public:
     //复制构造函数，方便将i节点表copy到内存的i结点表中
     INode(const INode &A);
     // 赋值构造函数
-    INode(int type, string setTime, string updateTime, string username);
+    INode(int type, string setTime, string updateTime, string username, int fileLen = 0, int diskSize = 0, int i_Nlink = 0, string content = "");
     //重载等号运算符，返回一个引用对象
     INode &operator=(const INode& B);
     //更新i结点的相关信息
@@ -64,7 +64,14 @@ public:
     int check();
     //计算i结点对应文件内容的大小
     int calculateFileSize(const string& filename);
-
+    //判断当前用户是否有打开i结点的权限
+    bool inodeIsAuthor(string username);
+    //为了存储i结点声明的转换成字符串的方法
+    string save_as_string();
+    //获得i结点的type类型
+    int getType();
+    //为i结点的所占的磁盘块区的编号进行索引存储
+    void saveDiskNumber(const vector<int>& numberSet);
 };
 
 //i结点表，存储在内存中
@@ -72,9 +79,9 @@ class INodeList{
 private:
     // 已使用的i结点数量
     int iNodeSize = 0;
+public:
     //i结点表，在初次进入程序之后获取i结点表
     INode inodeList[INODE_NUM];
-public:
     //获取空i结点号码
     int getFreeInodeNum();
     //添加新节点

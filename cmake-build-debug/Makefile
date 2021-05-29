@@ -142,6 +142,60 @@ os/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\os.dir\build.make CMakeFiles/os.dir/build
 .PHONY : os/fast
 
+directory.obj: directory.cpp.obj
+
+.PHONY : directory.obj
+
+# target to build an object file
+directory.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\os.dir\build.make CMakeFiles/os.dir/directory.cpp.obj
+.PHONY : directory.cpp.obj
+
+directory.i: directory.cpp.i
+
+.PHONY : directory.i
+
+# target to preprocess a source file
+directory.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\os.dir\build.make CMakeFiles/os.dir/directory.cpp.i
+.PHONY : directory.cpp.i
+
+directory.s: directory.cpp.s
+
+.PHONY : directory.s
+
+# target to generate assembly for a file
+directory.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\os.dir\build.make CMakeFiles/os.dir/directory.cpp.s
+.PHONY : directory.cpp.s
+
+fileSys.obj: fileSys.cpp.obj
+
+.PHONY : fileSys.obj
+
+# target to build an object file
+fileSys.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\os.dir\build.make CMakeFiles/os.dir/fileSys.cpp.obj
+.PHONY : fileSys.cpp.obj
+
+fileSys.i: fileSys.cpp.i
+
+.PHONY : fileSys.i
+
+# target to preprocess a source file
+fileSys.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\os.dir\build.make CMakeFiles/os.dir/fileSys.cpp.i
+.PHONY : fileSys.cpp.i
+
+fileSys.s: fileSys.cpp.s
+
+.PHONY : fileSys.s
+
+# target to generate assembly for a file
+fileSys.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\os.dir\build.make CMakeFiles/os.dir/fileSys.cpp.s
+.PHONY : fileSys.cpp.s
+
 gcm.obj: gcm.cpp.obj
 
 .PHONY : gcm.obj
@@ -168,6 +222,60 @@ gcm.s: gcm.cpp.s
 gcm.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\os.dir\build.make CMakeFiles/os.dir/gcm.cpp.s
 .PHONY : gcm.cpp.s
+
+help.obj: help.cpp.obj
+
+.PHONY : help.obj
+
+# target to build an object file
+help.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\os.dir\build.make CMakeFiles/os.dir/help.cpp.obj
+.PHONY : help.cpp.obj
+
+help.i: help.cpp.i
+
+.PHONY : help.i
+
+# target to preprocess a source file
+help.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\os.dir\build.make CMakeFiles/os.dir/help.cpp.i
+.PHONY : help.cpp.i
+
+help.s: help.cpp.s
+
+.PHONY : help.s
+
+# target to generate assembly for a file
+help.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\os.dir\build.make CMakeFiles/os.dir/help.cpp.s
+.PHONY : help.cpp.s
+
+inode.obj: inode.cpp.obj
+
+.PHONY : inode.obj
+
+# target to build an object file
+inode.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\os.dir\build.make CMakeFiles/os.dir/inode.cpp.obj
+.PHONY : inode.cpp.obj
+
+inode.i: inode.cpp.i
+
+.PHONY : inode.i
+
+# target to preprocess a source file
+inode.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\os.dir\build.make CMakeFiles/os.dir/inode.cpp.i
+.PHONY : inode.cpp.i
+
+inode.s: inode.cpp.s
+
+.PHONY : inode.s
+
+# target to generate assembly for a file
+inode.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\os.dir\build.make CMakeFiles/os.dir/inode.cpp.s
+.PHONY : inode.cpp.s
 
 main.obj: main.cpp.obj
 
@@ -223,6 +331,60 @@ memory.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\os.dir\build.make CMakeFiles/os.dir/memory.cpp.s
 .PHONY : memory.cpp.s
 
+ram.obj: ram.cpp.obj
+
+.PHONY : ram.obj
+
+# target to build an object file
+ram.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\os.dir\build.make CMakeFiles/os.dir/ram.cpp.obj
+.PHONY : ram.cpp.obj
+
+ram.i: ram.cpp.i
+
+.PHONY : ram.i
+
+# target to preprocess a source file
+ram.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\os.dir\build.make CMakeFiles/os.dir/ram.cpp.i
+.PHONY : ram.cpp.i
+
+ram.s: ram.cpp.s
+
+.PHONY : ram.s
+
+# target to generate assembly for a file
+ram.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\os.dir\build.make CMakeFiles/os.dir/ram.cpp.s
+.PHONY : ram.cpp.s
+
+user.obj: user.cpp.obj
+
+.PHONY : user.obj
+
+# target to build an object file
+user.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\os.dir\build.make CMakeFiles/os.dir/user.cpp.obj
+.PHONY : user.cpp.obj
+
+user.i: user.cpp.i
+
+.PHONY : user.i
+
+# target to preprocess a source file
+user.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\os.dir\build.make CMakeFiles/os.dir/user.cpp.i
+.PHONY : user.cpp.i
+
+user.s: user.cpp.s
+
+.PHONY : user.s
+
+# target to generate assembly for a file
+user.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\os.dir\build.make CMakeFiles/os.dir/user.cpp.s
+.PHONY : user.cpp.s
+
 # Help Target
 help:
 	@echo The following are some of the valid targets for this Makefile:
@@ -232,15 +394,33 @@ help:
 	@echo ... edit_cache
 	@echo ... rebuild_cache
 	@echo ... os
+	@echo ... directory.obj
+	@echo ... directory.i
+	@echo ... directory.s
+	@echo ... fileSys.obj
+	@echo ... fileSys.i
+	@echo ... fileSys.s
 	@echo ... gcm.obj
 	@echo ... gcm.i
 	@echo ... gcm.s
+	@echo ... help.obj
+	@echo ... help.i
+	@echo ... help.s
+	@echo ... inode.obj
+	@echo ... inode.i
+	@echo ... inode.s
 	@echo ... main.obj
 	@echo ... main.i
 	@echo ... main.s
 	@echo ... memory.obj
 	@echo ... memory.i
 	@echo ... memory.s
+	@echo ... ram.obj
+	@echo ... ram.i
+	@echo ... ram.s
+	@echo ... user.obj
+	@echo ... user.i
+	@echo ... user.s
 .PHONY : help
 
 

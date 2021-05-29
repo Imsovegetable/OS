@@ -85,10 +85,34 @@
 		<Unit filename="C:/Users/Chen Yining/CLionProjects/OS/GODNING.h">
 			<Option target="os"/>
 		</Unit>
+		<Unit filename="C:/Users/Chen Yining/CLionProjects/OS/directory.cpp">
+			<Option target="os"/>
+		</Unit>
+		<Unit filename="C:/Users/Chen Yining/CLionProjects/OS/directory.h">
+			<Option target="os"/>
+		</Unit>
+		<Unit filename="C:/Users/Chen Yining/CLionProjects/OS/fileSys.cpp">
+			<Option target="os"/>
+		</Unit>
+		<Unit filename="C:/Users/Chen Yining/CLionProjects/OS/fileSys.h">
+			<Option target="os"/>
+		</Unit>
 		<Unit filename="C:/Users/Chen Yining/CLionProjects/OS/gcm.cpp">
 			<Option target="os"/>
 		</Unit>
 		<Unit filename="C:/Users/Chen Yining/CLionProjects/OS/gcm.h">
+			<Option target="os"/>
+		</Unit>
+		<Unit filename="C:/Users/Chen Yining/CLionProjects/OS/help.cpp">
+			<Option target="os"/>
+		</Unit>
+		<Unit filename="C:/Users/Chen Yining/CLionProjects/OS/help.h">
+			<Option target="os"/>
+		</Unit>
+		<Unit filename="C:/Users/Chen Yining/CLionProjects/OS/inode.cpp">
+			<Option target="os"/>
+		</Unit>
+		<Unit filename="C:/Users/Chen Yining/CLionProjects/OS/inode.h">
 			<Option target="os"/>
 		</Unit>
 		<Unit filename="C:/Users/Chen Yining/CLionProjects/OS/main.cpp">
@@ -98,6 +122,18 @@
 			<Option target="os"/>
 		</Unit>
 		<Unit filename="C:/Users/Chen Yining/CLionProjects/OS/memory.h">
+			<Option target="os"/>
+		</Unit>
+		<Unit filename="C:/Users/Chen Yining/CLionProjects/OS/ram.cpp">
+			<Option target="os"/>
+		</Unit>
+		<Unit filename="C:/Users/Chen Yining/CLionProjects/OS/ram.h">
+			<Option target="os"/>
+		</Unit>
+		<Unit filename="C:/Users/Chen Yining/CLionProjects/OS/user.cpp">
+			<Option target="os"/>
+		</Unit>
+		<Unit filename="C:/Users/Chen Yining/CLionProjects/OS/user.h">
 			<Option target="os"/>
 		</Unit>
 		<Unit filename="C:/Users/Chen Yining/CLionProjects/OS/CMakeLists.txt">

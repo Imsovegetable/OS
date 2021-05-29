@@ -2,7 +2,7 @@
 // Created by 旧城筱雨 on 2021/5/27.
 //
 #include "directory.h"
-
+using namespace std;
 Directory* current_dir;
 
 Directory::Directory(){}
@@ -84,10 +84,21 @@ void Directory::init(int idSelf, int idParent)
 
 //计算目录中文件的个数
 int Directory::getFileNumFromDir() {
-    map<string, int> iter;
+    map<string, int>::iterator iter;
     int cnt = 0;
     for(iter=directory.begin(); iter!=directory.end(); iter++){
         cnt++;
     }
     return cnt;
+}
+
+//将目录map的内容转换为string类型便于存储
+string Directory::save_as_string_dir() {
+    map<string, int>::iterator iter;
+    string ans;
+    for(iter=directory.begin(); iter!=directory.end(); iter++){
+        ans += (iter->first +'\n');
+        ans += (to_string(iter->second) + '\n');
+    }
+    return ans;
 }

@@ -3,6 +3,7 @@
 //
 
 #include "inode.h"
+using namespace std;
 
 //模拟i结点的位示图，用来分配的时候查看i结点的空闲情况
 bool iNodeDistributeList[INODE_NUM];
@@ -23,15 +24,15 @@ INode::INode(const INode &A)
     indexT = A.indexT;
 }
 // 赋值构造函数
-INode::INode(int type, string setTime, string updateTime, string username)
+INode::INode(int type, string setTime, string updateTime, string username, int fileLen, int diskSize, int i_Nlink, string content)
         : type(type)
         , setTime(setTime)
         , updateTime(updateTime)
         , username(username)
-        , fileLen(0)
-        , diskSize(0)
-        , i_Nlink(0)
-        , content("")
+        , fileLen(fileLen)
+        , diskSize(diskSize)
+        , i_Nlink(i_Nlink)
+        , content(content)
 {
 
 }
@@ -159,6 +160,24 @@ INode INodeList::getInode(int id)
 string INode::save_as_string() {
     string ans;
     ans = username + '\n' + to_string(type) + '\n' + to_string(i_Nlink) + '\n' + to_string(fileLen) + '\n'
-            + to_string(diskSize) + '\n' + setTime + '\n' + updateTime + '\n';
+            + to_string(diskSize) + '\n' + setTime + updateTime + '\n';
+    ans +=  (to_string(dir.size()) + '\n');
+    vector<int> tmp = indexT.getIndexes();
+    for(int i : tmp){
+        ans += ans + to_string(i);
+        ans += '\n';
+    }
     return ans;
 }
+
+int INode::getType() {
+    return type;
+}
+
+void INode::saveDiskNumber(const vector<int>& numberSet) {
+    for(int i : numberSet){
+        indexT.addIndex(i);
+    }
+}
+
+

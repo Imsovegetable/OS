@@ -3,6 +3,7 @@
 //
 
 #include "fileSys.h"
+#include "inode.h"
 
 void SuperBlock::createFile(const string& fileName)
 {
@@ -48,27 +49,15 @@ void fileSystem::saveInodeInfo() {
     for(int i=0; i<INODE_NUM; i++){
         //如果位示图的是true，代表i结点存在
         if(iNodeDistributeList[i]){
-            //存储i结点的一些公共属性
-            file<<superBlock.iNodeList.inodeList[i].username<<endl;
-            file<<superBlock.iNodeList.inodeList[i].type<<endl;
-            file<<superBlock.iNodeList.inodeList[i].i_Nlink<<endl;
-            file<<superBlock.iNodeList.inodeList[i].fileLen<<endl;
-            file<<superBlock.iNodeList.inodeList[i].diskSize<<endl;
-            file<<superBlock.iNodeList.inodeList[i].setTime<<endl;
-            file<<superBlock.iNodeList.inodeList[i].updateTime<<endl;
-            //存储i结点的索引块的编号
-            file<<superBlock.iNodeList.inodeList[i].indexT.getIndexes()<<endl;
-            if(superBlock.iNodeList.inodeList[i].type == 1){
+            //存储i结点的一些公共属性以及索引编号
+            file << superBlock.iNodeList.inodeList->save_as_string();
+            if(superBlock.iNodeList.inodeList[i].getType() == 1){
                 //如果i结点是目录类型
                 //如果是目录需要存储对应的目录下面的文件标识
                 file<<superBlock.iNodeList.inodeList[i].dir.getFileNumFromDir()<<endl;
-                map<string, int>::iterator iter;
-                for(iter = superBlock.iNodeList.inodeList[i].directory.begin(); iter != superBlock.iNodeList.inodeList[i].directory.begin().end(); iter++){
-                    file<<iter->first<<endl;
-                    file<<iter->second<<endl;
-                }
+                file<<superBlock.iNodeList.inodeList[i].dir.save_as_string_dir();
             }
-            else if(superBlock.iNodeList.inodeList[i].type == 0) {
+            else if(superBlock.iNodeList.inodeList[i].getType() == 0) {
                 //如果i结点是文件类型
                 //如果是文件类型，需要存储对应的文本内容
                 file << superBlock.iNodeList.inodeList[i].content << endl;
@@ -94,45 +83,62 @@ void fileSystem::readInodeInfo() {
         else
             i = false;
     }
+    //根据位示图的存储情况进行判断，进而读取i结点的信息
     for(int i=0; i<INODE_NUM; i++){
         if(iNodeDistributeList[i]){
+            string username, setTime, updateTime;
+            int type, i_Nlink, fileLen, diskSize;
             //如果位示图对应结点值为true，此时可以进行读取结点信息
-            file >> superBlock.iNodeList.inodeList[i].username;
-            file >> superBlock.iNodeList.inodeList[i].type;
-            file >> superBlock.iNodeList.inodeList[i].i_Nlink;
-            file >> superBlock.iNodeList.inodeList[i].fileLen;
-            file >> superBlock.iNodeList.inodeList[i].diskSize;
-            file >> superBlock.iNodeList.inodeList[i].setTime;
-            file >> superBlock.iNodeList.inodeList[i].updateTime;
+            file >> username;
+            file >> type;
+            file >> i_Nlink;
+            file >> fileLen;
+            file >> diskSize;
+            file >> setTime;
+            file >> updateTime;
             file >> line;
-            int s = 0;
-            //记录每个文件/目录对应的索引块，首先读入一个字符串，然后对字符串中处理成对应的数字存储到i结点的索引数组中
-            for(int j=0; j<line.size(); j++){
-                if(s[j] >= '0' && s[j] <= '9'){
-                    s = s*10 + s[j] - '0';
+            //添加一个新的i结点
+            INode A(type, setTime, updateTime, username, fileLen, diskSize, i_Nlink);
+            superBlock.iNodeList.inodeList[i] = A;
+            int dirSize = atoi(line.c_str());
+            //这一行之前已经存储完了inode的所有基础元素
+            //diskSet是暂时存储所有磁盘编号的数组
+            vector<int> diskSet;
+            while(dirSize--){
+                //如果dirsize不是0，代表该文件/目录占磁盘块
+                file >> line;
+                int s = 0;
+                //记录每个文件/目录对应的索引块，首先读入一个字符串，然后对字符串中处理成对应的数字存储到i结点的索引数组中
+                for(char j : line){
+                    if(j >= '0' && j <= '9'){
+                        s = s*10 + j - '0';
+                    }
+                    else if(line[j])
+                        //计算出对应inode存储的磁盘块的编号，然后写入索引表中
+                        diskSet.push_back(s), s=0;
                 }
-                else if(s[j])
-                    superBlock.iNodeList.inodeList[i].indexT.indexes.push_back(s), s=0;
             }
-            if(superBlock.iNodeList.inodeList[i].type == 1){
+            //把diskSet存储到i结点对应的磁盘索引中
+            superBlock.iNodeList.inodeList[i].saveDiskNumber(diskSet);
+
+            if(type == 1){
                 //i结点对应的type值为1代表i结点存储的是目录类型
                 file >> line;
-                s = 0;
-                for(char j : line){
-                    s = s*10 + j-'0';
-                }
-                while(s--){
-                    string key;
-                    string value;
-                    int val;
-                    line>>key;
-                    line>>val;
-                    val = atoi(value.c_str());
+                //numFromDir获取目录对应的存储文件的文件数量
+                int numFromDir = atoi(line.c_str());
+                while(numFromDir--){
+                    //按照计算出的文件数量进行获取文件的map索引
+                    file >> line;
+                    string key = line;
+                    file >> line;
+                    string value = line;
+                    int val = atoi(value.c_str());
+                    //存储对应的文件目录
                     superBlock.iNodeList.inodeList[i].dir.addItem(key, val);
                 }
             }
-            else if(superBlock.iNodeList.inodeList[i].type == 0){
-                //如果i结点的type值为0代表i结点存储的是文件类型，需要存储对应的文本内容
+            else if(type == 0){
+                //如果i结点的type值为0代表i结点存储的是文件类型，则下一步是读取对应的文件内容
                 file >> superBlock.iNodeList.inodeList[i].content;
             }
         }

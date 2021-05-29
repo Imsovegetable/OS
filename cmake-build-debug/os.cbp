@@ -85,10 +85,34 @@
 		<Unit filename="D:/os/GODNING.h">
 			<Option target="os"/>
 		</Unit>
+		<Unit filename="D:/os/directory.cpp">
+			<Option target="os"/>
+		</Unit>
+		<Unit filename="D:/os/directory.h">
+			<Option target="os"/>
+		</Unit>
+		<Unit filename="D:/os/fileSys.cpp">
+			<Option target="os"/>
+		</Unit>
+		<Unit filename="D:/os/fileSys.h">
+			<Option target="os"/>
+		</Unit>
 		<Unit filename="D:/os/gcm.cpp">
 			<Option target="os"/>
 		</Unit>
 		<Unit filename="D:/os/gcm.h">
+			<Option target="os"/>
+		</Unit>
+		<Unit filename="D:/os/help.cpp">
+			<Option target="os"/>
+		</Unit>
+		<Unit filename="D:/os/help.h">
+			<Option target="os"/>
+		</Unit>
+		<Unit filename="D:/os/inode.cpp">
+			<Option target="os"/>
+		</Unit>
+		<Unit filename="D:/os/inode.h">
 			<Option target="os"/>
 		</Unit>
 		<Unit filename="D:/os/main.cpp">
@@ -98,6 +122,18 @@
 			<Option target="os"/>
 		</Unit>
 		<Unit filename="D:/os/memory.h">
+			<Option target="os"/>
+		</Unit>
+		<Unit filename="D:/os/ram.cpp">
+			<Option target="os"/>
+		</Unit>
+		<Unit filename="D:/os/ram.h">
+			<Option target="os"/>
+		</Unit>
+		<Unit filename="D:/os/user.cpp">
+			<Option target="os"/>
+		</Unit>
+		<Unit filename="D:/os/user.h">
 			<Option target="os"/>
 		</Unit>
 		<Unit filename="D:/os/CMakeLists.txt">

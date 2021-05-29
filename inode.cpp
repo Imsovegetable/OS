@@ -119,7 +119,7 @@ int INode::check()
 {
     return i_Nlink;
 }
-
+// 获取i节点表的空闲项编号
 int INodeList::getFreeInodeNum()
 {
     for(int i=0; i<INODE_NUM; i++)

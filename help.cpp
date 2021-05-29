@@ -4,7 +4,7 @@
 
 #include "help.h"
 
-int statictic(string filename)
+int statistic(string filename)
 {
     ifstream fin(filename);
     if(!fin.is_open())

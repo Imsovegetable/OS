@@ -45,6 +45,8 @@ public:
             cout << it.first << " " << it.second << endl;
         cout << "——————————————————————————————\n";
     }
+    //获取目录结点里面的文件个数
+    int getFileNumFromDir();
 };
 
 extern Directory* current_dir;

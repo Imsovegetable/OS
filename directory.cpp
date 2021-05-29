@@ -81,3 +81,13 @@ void Directory::init(int idSelf, int idParent)
     directory["."] = idSelf;
     directory[".."] = idParent;
 }
+
+//计算目录中文件的个数
+int Directory::getFileNumFromDir() {
+    map<string, int> iter;
+    int cnt = 0;
+    for(iter=directory.begin(); iter!=directory.end(); iter++){
+        cnt++;
+    }
+    return cnt;
+}

@@ -2,11 +2,12 @@
 // Created by 旧城筱雨 on 2021/5/28.
 //
 #include "directory.h"
-#include "INode.h"
+#include "inode.h"
 #include "GODNING.h"
 #include "memory.h"
 #include "user.h"
 #include "help.h"
+
 
 #ifndef OS_FILESYS_H
 #define OS_FILESYS_H
@@ -37,6 +38,12 @@ public:
     SuperBlock superBlock;
     //创建文件
     void fileCreate(const string& fileName);
+    //保存所有i结点，在用户退出的时候调用以保存所有的i结点信息
+    void saveInodeInfo();
+    //读取所有i结点的信息，在用户登录之后调用以读取所以的i结点信息
+    void readInodeInfo();
 };
+
+
 
 #endif //OS_FILESYS_H

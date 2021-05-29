@@ -64,6 +64,8 @@ public:
     int check();
     //计算i结点对应文件内容的大小
     int calculateFileSize(const string& filename);
+    //判断当前用户是否有打开i结点的权限
+    bool inodeIsAuthor(string username);
 
 };
 

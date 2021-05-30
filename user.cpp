@@ -4,8 +4,57 @@
 
 #include "user.h"
 
-user* current_user;
+string current_user = "";
 
+User::User(){}
+
+User::User(string un, string pw, Directory *dir)
+: cur_dir(dir)
+, username(un)
+, password(pw){}
+// 获取用户名
+string User::getUsername()
+{
+    return username;
+}
+// 获取密码
+string User::getPassword()
+{
+    return password;
+}
+// 登录
+string User::login(string un, string pw)
+{
+    if(un == username && pw == password)
+    {
+        state = true;
+        return username;
+    }
+    else
+        return "";
+}
+// 获取当前目录
+Directory* User::getCurDir()
+{
+    return cur_dir;
+}
+//设置当前目录
+void User::setCurDir(Directory *dir)
+{
+    cur_dir = dir;
+}
+// 检查状态
+bool User::check()
+{
+    return state;
+}
+// 登出
+void User::loginOut()
+{
+    state = false;
+}
+
+//计算文件大小
 int Users::calculateFileSize(const string& filename)
 {
     ifstream file(filename);
@@ -16,6 +65,7 @@ int Users::calculateFileSize(const string& filename)
     return t.size();
 }
 
+// 读取用户列表
 void Users::readUserList()
 {
     ifstream file("users.txt");
@@ -25,25 +75,26 @@ void Users::readUserList()
     }
     string line;
     while(getline(file, line)){
-        user tmp;
-        tmp.username = line;
+        string username = line;
         getline(file, line);
-        tmp.password = line;
+        string password = line;
+        User tmp(username, password);
         userList.push_back(tmp);
     }
 }
 
+//是否存在该用户
 bool Users::IsExistedAuthor(const string& username)
 {
     readUserList();
     for(auto & i : userList){
-        if(i.username == username){
+        if(i.getUsername() == username){
             return true;
         }
     }
     return false;
-
 }
+
 
 //bool Users::fileIsAuthor(int inodeNum, const string& username){
 //
@@ -51,18 +102,19 @@ bool Users::IsExistedAuthor(const string& username)
 //
 //}
 
+//新建用户
 void Users::createUser(const string& username, const string& password)
 {
     if(!IsExistedAuthor(username)){
-        user tmp;
-        tmp.username = username;
-        tmp.password = password;
+        User tmp(username, password);
         userList.push_back(tmp);
+        userListSize++;
         //    file<<tmp.username<<endl;
         //    file<<tmp.password<<endl;
     }
 }
 
+// 保存用户
 void Users::saveUser()
 {
     ofstream file("users.txt");
@@ -71,9 +123,72 @@ void Users::saveUser()
         exit(0);
     }
     for(auto & i : userList){
-        file<<i.username<<endl;
-        file<<i.password<<endl;
+        file<<i.getUsername()<<endl;
+        file<<i.getPassword()<<endl;
     }
     file.close();
+}
 
+//用户登录
+bool Users::login(string username, string password)
+{
+    for(int i = 0; i < userListSize; i++)
+    {
+        if(userList[i].login(username, password) != "")
+        {
+            current_user = username;
+            // 加载目录一类的
+            return true;
+        }
+    }
+    return false;
+}
+// 搜索用户
+int Users::searchUser(string username)
+{
+    for(int i = 0; i < userListSize; i++)
+    {
+        if(userList[i].getUsername() == username)
+            return i;
+    }
+    return -1;
+}
+// 切换用户
+bool Users::switchUser(string username)
+{
+    int i = searchUser(username);
+    if(i == -1)
+        return false;
+    if(userList[i].check())
+    {
+        current_user = userList[i].getUsername();
+        return true;
+    }
+    else
+        return false;
+}
+// 登出
+void Users::loginOut()
+{
+    int i = searchUser(current_user);
+    if(i == -1)
+        return;
+    userList[i].loginOut();
+    current_user = "";
+}
+// 获取当前目录
+Directory* Users::getCurDir()
+{
+    int i = searchUser(current_user);
+    if(i == -1)
+        return nullptr;
+    return userList[i].getCurDir();
+}
+// 设置当前目录
+void Users::setCurDir(Directory* dir)
+{
+    int i = searchUser(current_user);
+    if(i == -1)
+        return;
+    userList[i].setCurDir(dir);
 }

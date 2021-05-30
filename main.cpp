@@ -10,6 +10,11 @@ using namespace std;
 
 int main()
 {
+
+	return 0;
+}
+
+
 //    MixIndex index;
 //    for(int i = 1; i <= 16; i++)
 //        index.addIndex(i);
@@ -59,16 +64,14 @@ int main()
 //    f.show();
 //    cout << f.size() << endl;
 
-    UserOpenList u("cyndsb");
-    cout << u.searchFreeItem() << endl;
-    u.addItem(2, 4);
-    u.addItem(88, 99);
-    cout << u.searchId(3) << endl;
-    cout << u.searchId(2) << endl;
-    cout << u.getFileId(2) << endl;
-    u.deleteItem(88);
-    cout << u.getFileId(2) << endl;
-    cout << u.searchFreeItem() << endl;
-    cout << u.searchId(2) << endl;
-	return 0;
-}
+//    UserOpenList u("cyndsb");
+//    cout << u.searchFreeItem() << endl;
+//    u.addItem(2, 4);
+//    u.addItem(88, 99);
+//    cout << u.searchId(3) << endl;
+//    cout << u.searchId(2) << endl;
+//    cout << u.getFileId(2) << endl;
+//    u.deleteItem(88);
+//    cout << u.getFileId(2) << endl;
+//    cout << u.searchFreeItem() << endl;
+//    cout << u.searchId(2) << endl;

@@ -38,7 +38,10 @@ class fileSystem{
 public:
     //超级块
     SuperBlock superBlock;
-    //内存i结点表
+
+    // 用户列表
+    Users users;
+
     INodeListInRam iNodeListInRam;
     //创建文件
     void fileCreate(const string& fileName);
@@ -52,8 +55,15 @@ public:
     void saveInodeInfo();
     //读取所有i结点的信息，在用户登录之后调用以读取所以的i结点信息
     void readInodeInfo();
+    //
+    void openFile(string fileName);
 };
 
+void fileSystem::openFile(string fileName)
+{
+    Directory* dir = users.getCurDir();
+    int id = 1;
+}
 
 
 #endif //OS_FILESYS_H

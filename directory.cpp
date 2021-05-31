@@ -102,3 +102,13 @@ string Directory::save_as_string_dir() {
     }
     return ans;
 }
+
+string Directory::getFileName(int id)
+{
+    for(auto& it:directory)
+    {
+        if(it.second == id)
+            return it.first;
+    }
+    return "";
+}

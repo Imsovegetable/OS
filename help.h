@@ -2,6 +2,7 @@
 // Created by 旧城筱雨 on 2021/5/27.
 //
 #include <bits/stdc++.h>
+#include "user.h"
 #ifndef OS_HELP_H
 #define OS_HELP_H
 

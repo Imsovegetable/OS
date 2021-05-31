@@ -65,8 +65,12 @@ public:
     bool writeFile(string fileName, string content);
 
     void showFileInfo(string fileName);
+
+    Directory* returnToParent();
+
 };
 
+extern fileSystem fileSys;
 //void fileSystem::showFileInfo(string fileName)
 //{
 //

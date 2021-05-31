@@ -49,6 +49,8 @@ public:
     int getFileNumFromDir();
     //将vector转换成string类型便于存储
     string save_as_string_dir();
+    //返回指定id对应的文件名
+    string getFileName(int id);
 };
 
 

@@ -4,6 +4,8 @@
 
 #include "fileSys.h"
 
+fileSystem fileSys;
+
 SuperBlock::SuperBlock() {superGroup.init();}
 // 创建文件
 void SuperBlock::createFile(const string& fileName, Directory* cur_dir)
@@ -364,4 +366,13 @@ bool fileSystem::writeFile(string fileName, string content)
     // 更新i结点里的容量信息
     iNodeListInRam.getNode(id).updateFileSize();
     return true;
+}
+
+Directory* fileSystem::returnToParent()
+{
+    Directory* t = users.getCurDir();
+    int id = t->getItem("..");
+    t = &(superBlock.iNodeList.getInode(id).dir);
+    users.setCurDir(t);
+    return t;
 }

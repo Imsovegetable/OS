@@ -41,6 +41,7 @@ void SuperBlock::createFile(const string& fileName, Directory* cur_dir)
     {
         free_inode--;
     }
+
 }
 
 /*
@@ -375,4 +376,16 @@ Directory* fileSystem::returnToParent()
     t = &(superBlock.iNodeList.getInode(id).dir);
     users.setCurDir(t);
     return t;
+}
+
+//创建根目录的函数
+void fileSystem::createRootDirectory() {
+    /*
+     *根目录的创建不需要找到对应的父母i结点的id,分配在外存i结点表的第0号结点位置
+     * */
+    iNodeDistributeList[0] = true;
+    INode RootInode(1, getcurrentTime(), getcurrentTime(), current_user);
+    RootInode.dir.init(0, 0);
+    superBlock.iNodeList.inodeList[0] = RootInode;
+
 }

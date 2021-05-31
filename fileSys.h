@@ -68,6 +68,7 @@ public:
 
     Directory* returnToParent();
 
+    void createRootDirectory();
 };
 
 extern fileSystem fileSys;

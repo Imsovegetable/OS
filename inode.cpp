@@ -193,4 +193,10 @@ void INode::saveDiskNumber(const vector<int>& numberSet) {
     }
 }
 
+bool INode::inodeIsAuthor(string username) {
+    if(getUser() == username)
+        return true;
+    return false;
+}
+
 

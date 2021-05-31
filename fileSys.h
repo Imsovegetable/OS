@@ -31,9 +31,22 @@ public:
     //其他待补充！！！
     //为创建文件分配一个i结点
 
+
     SuperBlock();
 
     void createFile(const string& fileName, Directory* cur_dir);
+
+    //在超级块中的相关删除文件函数
+    void deleteFile(const string& fileName, Directory& directory);
+    //超级块中创建目录函数
+    void createDirectory(const string &directoryName, INode &dir, Directory& directory, int pos);
+    //超级块中删除目录函数
+    void deleteDirectory(const string& directoryName, INode& dir, Directory& directory, int pos);
+    // 创建目录和文件的i结点的总体函数
+    void createFileAndDirectory();
+    // 删除目录和文件的总体函数
+    void deleteFileAndDirectory();
+
 
 };
 
@@ -43,7 +56,7 @@ public:
     SuperBlock superBlock;
     // 用户列表
     Users users;
-
+    //文件系统内存i结点表
     INodeListInRam iNodeListInRam;
 
     FileOpenList fileOpenList;
@@ -55,6 +68,7 @@ public:
     void saveInodeInfo();
     //读取所有i结点的信息，在用户登录之后调用以读取所以的i结点信息
     void readInodeInfo();
+
     // 打开文件
     bool openFile(string fileName, int sign = 0, int mode = 0); // sign = 0表示从头读取，sign = 1表示追加, mode = 0表示读, mode = 1表示写
     // 关闭文件，只能关闭当前目录下的文件
@@ -67,6 +81,10 @@ public:
     void showFileInfo(string fileName);
 
     Directory* returnToParent();
+
+};
+
+
 
 };
 

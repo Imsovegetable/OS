@@ -45,7 +45,7 @@ void SuperBlock::createFile(const string& fileName, Directory* cur_dir)
     {
         free_inode--;
     }
-    
+
 }
 
 
@@ -55,11 +55,11 @@ void fileSystem::fileCreate(const string& fileName)
     //遍历current_dir的所有指向的文件的i结点，查找是否已经有当前这个文件名了,如果有输出错误
     Directory* cur_dir = users.getCurDir();
     if(cur_dir != nullptr)
-    if(cur_dir->checkItem(fileName))
-    {
-        cout << "the file '" << fileName << "' has already existed\n";
-        return ;
-    }
+        if(cur_dir->checkItem(fileName))
+        {
+            cout << "the file '" << fileName << "' has already existed\n";
+            return ;
+        }
     superBlock.createFile(fileName, cur_dir);
     openFile(fileName, 0, 1);
 }
@@ -498,6 +498,7 @@ bool fileSystem::writeFile(string fileName, string content)
     return true;
 }
 
+// 返回目录上一级
 Directory* fileSystem::returnToParent()
 {
     Directory* t = users.getCurDir();
@@ -505,4 +506,16 @@ Directory* fileSystem::returnToParent()
     t = &(superBlock.iNodeList.getInode(id).dir);
     users.setCurDir(t);
     return t;
+}
+
+//创建根目录的函数
+void fileSystem::createRootDirectory() {
+    /*
+     *根目录的创建不需要找到对应的父母i结点的id,分配在外存i结点表的第0号结点位置
+     * */
+    iNodeDistributeList[0] = true;
+    INode RootInode(1, getcurrentTime(), getcurrentTime(), current_user);
+    RootInode.dir.init(0, 0);
+    superBlock.iNodeList.inodeList[0] = RootInode;
+
 }

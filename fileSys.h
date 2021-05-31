@@ -48,6 +48,7 @@ public:
     void deleteFileAndDirectory();
 
 
+
 };
 
 class fileSystem{
@@ -82,13 +83,19 @@ public:
 
     Directory* returnToParent();
 
+    void directoryDelete(const string &directoryName);
+
+    void directoryCreate(const string &directoryName);
+
+    void fileDelete(const string &fileName);
+
+    void createRootDirectory();
 };
 
-
-
-};
 
 extern fileSystem fileSys;
+
+
 //void fileSystem::showFileInfo(string fileName)
 //{
 //

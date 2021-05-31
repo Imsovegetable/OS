@@ -4,11 +4,13 @@
 
 #include "fileSys.h"
 
+
 fileSystem fileSys;
 
 SuperBlock::SuperBlock() {superGroup.init();}
 // 创建文件
 void SuperBlock::createFile(const string& fileName, Directory* cur_dir)
+
 {
     //为新建的文件开辟一个空闲的i结点
     int i = iNodeList.getFreeInodeNum();
@@ -19,6 +21,8 @@ void SuperBlock::createFile(const string& fileName, Directory* cur_dir)
     }
     //为当前的目录的map添加文件的键值对
     cur_dir->addItem(fileName, i);
+    //更新对应i结点的位示图
+    iNodeDistributeList[i] = true;
     int id = cur_dir->getItem(".");
     int n = iNodeList.getInode(id).differ();
     iNodeList.getInode(id).updateFileSize();
@@ -41,15 +45,8 @@ void SuperBlock::createFile(const string& fileName, Directory* cur_dir)
     {
         free_inode--;
     }
-}
 
-/*
- *
- *
-********************************************************************************************************************
- *
- *
-*/
+}
 
 
 //创建文件
@@ -58,17 +55,99 @@ void fileSystem::fileCreate(const string& fileName)
     //遍历current_dir的所有指向的文件的i结点，查找是否已经有当前这个文件名了,如果有输出错误
     Directory* cur_dir = users.getCurDir();
     if(cur_dir != nullptr)
-    if(cur_dir->checkItem(fileName))
-    {
-        cout << "the file '" << fileName << "' has already existed\n";
-        return ;
-    }
+        if(cur_dir->checkItem(fileName))
+        {
+            cout << "the file '" << fileName << "' has already existed\n";
+            return ;
+        }
     superBlock.createFile(fileName, cur_dir);
+    openFile(fileName, 0, 1);
 }
 
-// 存储i结点信息
-void fileSystem::saveInodeInfo()
-{
+
+//在超级块中相关的删除文件函数
+void SuperBlock::deleteFile(const string &fileName, Directory& directory) {
+    int pos = -1;
+    //当前的目录是current_dir,需要在current_dir下面获取文件名所对应外存里存的i结点编号
+    pos = directory.getItem(fileName);
+    if (pos == -1) {
+        cout << "the file does not exist!" << endl;
+        return;
+    }
+    //在当前的目录下删除对应文件的键值对
+    directory.deleteItem(fileName);
+    //删除对应的位示图
+    iNodeDistributeList[pos] = false;
+    //删除外存i结点表里面的i结点
+    iNodeList.FreeInvalidInode(pos);
+    //对超级块中记录的外存的i结点空闲结点数更新
+    free_inode++;
+}
+
+//fileSystem主类下的删除文件函数
+void fileSystem::fileDelete(const string &fileName) {
+    /*
+     * 文件系统中删除一个文件都包括以下几个方面：
+     * 删除内存中内存i节点表中的i结点
+     * 删除外存i结点表中的i结点
+     * 将i结点位示图中的对应位置写成false
+     * 为当前的目录的map删掉对应文件的键值对
+     * */
+    int pos = -1;
+    pos = users.getCurDir()->getItem(fileName);
+    //pos是对应文件在内存中的i结点表中的位置
+    int tmp = iNodeListInRam.searchNode(pos);
+    if(tmp == -1){
+        cout << "the file does not exist in iNodeListRam" << endl;
+        return;
+    }
+    //检查当前用户是否有该文件的创建和删除的权限
+    if(superBlock.iNodeList.getInode(pos).inodeIsAuthor(current_user)){
+        //在内存i结点表中删除对应位置的i结点
+        iNodeListInRam.freeNode(tmp);
+        //在超级块中对外存的i结点表中对应的i结点进行删除
+        superBlock.deleteFile(fileName, *users.getCurDir());
+    }
+}
+
+//超级块的删除目录函数
+void SuperBlock::deleteDirectory(const string& directoryName, INode& dir, Directory& directory, int pos) {
+    /*
+     * 在超级块中删除对应目录的函数主要包括删除对应i结点的位示图中的位置，在当前目录下删除要删除目录的键值对，在外存的i结点表中删除对应的i结点
+     * */
+    //位示图对应的点置为false
+    iNodeDistributeList[pos] = false;
+    //在当前的目录的map键值对下删除对应的键值对
+    directory.deleteItem(directoryName);
+    //在外存i结点表删除对应的i结点
+    iNodeList.FreeInvalidInode(pos);
+}
+
+//超级块中创建目录的函数
+void SuperBlock::createDirectory(const string &directoryName, INode &dir, Directory& directory, int pos) {
+    /*
+     * 在超级块中创建目录函数需要更新当前目录的map,更新外存i节点表,以及更新位示图
+     * */
+    // 更新i结点位示图
+    iNodeDistributeList[pos] = true;
+    // 更新外存的i结点表
+    iNodeList.inodeList[pos] = dir;
+    // 更新键值对
+    directory.addItem(directoryName, pos);
+}
+
+// 创建文件和目录的总体函数
+void SuperBlock::createFileAndDirectory() {
+
+}
+
+// 删除文件和目录的总体函数
+void SuperBlock::deleteFileAndDirectory() {
+
+}
+
+//文件系统中的保存所有i结点信息的函数
+void fileSystem::saveInodeInfo() {
     //将所有i结点的信息写到txt中作为记录，在每次用户退出登录之后要进行函数调用来存储
     ofstream file("inodesInfo.txt");
     if(!file.is_open()){
@@ -100,14 +179,65 @@ void fileSystem::saveInodeInfo()
     file.close();
 }
 
-//读取i结点信息
-void fileSystem::readInodeInfo()
-{
+
+//文件系统主类下面的创建目录函数
+void fileSystem::directoryCreate(const string &directoryName) {
+    /*
+     * 在文件系统主类下创建目录函数主要包括：
+     * 在外存的i结点表里进行存储位示图和i结点表，另外再把新生成的目录写到当前目录的map中
+     * */
+    //parent_id表示上层目录文件夹i结点的id
+    int parent_id;
+    parent_id = users.getCurDir()->getItem(".");
+    //获取空闲的i结点
+    int pos = superBlock.iNodeList.getFreeInodeNum();
+    if(pos == -1){
+        cout << "the inodes has run out!" << endl;
+        return ;
+    }
+    //cur_id表示当前目录i结点的id
+    int cur_id = pos;
+    //判断当前用户是否有创建和删除目录的权限
+    INode newInode(1, getcurrentTime(), getcurrentTime(), current_user);
+    //在directory进行init，设置当前目录的父目录和自身
+    newInode.dir.init(cur_id, parent_id);
+    //调用superBlock中的创建
+    if(superBlock.iNodeList.getInode(pos).inodeIsAuthor(current_user)){
+        //调用超级块superblock中的create函数
+        superBlock.createDirectory(directoryName, newInode, *users.getCurDir(), pos);
+    }
+}
+
+//文件系统主类下面的删除目录函数
+void fileSystem::directoryDelete(const string &directoryName) {
+    /*
+     * 在文件系统主类下删除目录函数主要包括：
+     * 在外存的i结点表更新位示图对应的结点，更新i结点表删除对应i结点，另外再在当前的目录的map下删除需要删除的目录
+     * */
+    //pos存储对应目录i结点在外存i结点表的编号
+    int pos = -1;
+    pos = users.getCurDir()->getItem(directoryName);
+    if(pos == -1){
+        cout << "the directory does not exist!" << endl;
+        return ;
+    }
+    if(superBlock.iNodeList.getInode(pos).inodeIsAuthor(current_user)){
+        //获取i结点的函数：INode getInode(int id)
+        INode tmp = superBlock.iNodeList.getInode(pos);
+        superBlock.deleteDirectory(directoryName, tmp, *users.getCurDir(), pos);
+    }
+
+
+}
+
+//文件系统下面的读取i结点到外存i结点表中的函数
+void fileSystem::readInodeInfo() {
+
     //将所有txt中的信息读到i结点中作为记录，在每次用户登录之后都要进行函数调用来存储
     ifstream file("inodesInfo.txt");
     if(!file.is_open()){
-        cout<<"inodeInfo.txt can not open in readInodeInfo function"<<endl;
-        exit(0);
+        cout << "inodeInfo.txt can not open in readInodeInfo function" << endl;
+        return ;
     }
     string line;
     //读取位示图

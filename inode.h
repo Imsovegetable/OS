@@ -97,7 +97,7 @@ public:
     //更新i结点
     void UpdateInode(int id, INode ano);
     // 获取某个i结点
-    INode getInode(int id);
+    INode& getInode(int id);
 };
 
 #endif //OS_INODE_H

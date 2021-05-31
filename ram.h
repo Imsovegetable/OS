@@ -72,6 +72,8 @@ public:
     void dcrLink();
     // 显示信息
     void show();
+    // 获取模式
+    int getMode();
 };
 
 // 系统文件打开表
@@ -107,6 +109,8 @@ public:
     int getFreeItem();
     // 显示信息
     void show();
+    // 获取模式
+    int getMode(int id);
 };
 
 class UserOpenItem{
@@ -142,17 +146,19 @@ public:
     // 清空
     void clear();
     // 获取系统文件打开表下标
-    int getFileId(int iNodeId);
+    int getFileId(int iNodeId, int num = 1);
     // 添加一个项
     bool addItem(int iNodeId, int fileId);
     // 删除一个项
     bool deleteItem(int iNodeId);
     // 寻找下标
-    int searchId(int iNodeId);
+    int searchId(int iNodeId, int num = 1);
     // 寻找空闲下标
     int searchFreeItem();
     // 获取用户名
     string getUserName();
+    // 计算某个文件打开了几次
+    int count(int iNodeId);
 };
 
 

@@ -63,7 +63,13 @@ public:
     string readFile(string fileName, int len);
 
     bool writeFile(string fileName, string content);
+
+    void showFileInfo(string fileName);
 };
 
+//void fileSystem::showFileInfo(string fileName)
+//{
+//
+//}
 
 #endif //OS_FILESYS_H

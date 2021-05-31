@@ -86,7 +86,7 @@ void Users::readUserList()
 //是否存在该用户
 bool Users::IsExistedAuthor(const string& username)
 {
-    readUserList();
+//    readUserList();
     for(auto & i : userList){
         if(i.getUsername() == username){
             return true;

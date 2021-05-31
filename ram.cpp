@@ -48,9 +48,9 @@ INode INodeListInRam::freeNode(int id)
 INode& INodeListInRam::getNode(int id)
 {
     int i = searchNode(id);
-    INode t;
-    if(i == -1)
-        return t;
+//    INode t;
+//    if(i == -1)
+//        return t;
     return iNodeList[i];
 }
 // 寻找id所对应的内存i结点的下标
@@ -143,6 +143,12 @@ void FileOpenItem::dcrLink()
 void FileOpenItem::show()
 {
     cout << "offset = " << offSet << ",linkN = " << linkN << ",flag = " << flags << ",mode = " << mode << ",id = " << id;
+}
+
+// 获取模式
+int FileOpenItem::getMode()
+{
+    return mode;
 }
 
 
@@ -247,6 +253,11 @@ void FileOpenList::setOffset(int id, int offset)
 {
     fileOpenList[id].setOffset(offset);
 }
+// 获取模式
+int FileOpenList::getMode(int id)
+{
+    return fileOpenList[id].getMode();
+}
 
 
 
@@ -297,19 +308,23 @@ void UserOpenList::clear()
         iNodeToFile[i].clear();
 }
 // 获取系统文件打开表下标
-int UserOpenList::getFileId(int iNodeId)
+int UserOpenList::getFileId(int iNodeId, int num)
 {
-    int id = searchId(iNodeId);
+    int id = searchId(iNodeId, num);
     if(id == -1)
         return -1;
     return iNodeToFile[id].getId();
 }
 //寻找下标
-int UserOpenList::searchId(int iNodeId)
+int UserOpenList::searchId(int iNodeId, int num)
 {
     for(int i = 0; i < MAX_USER_FD; i++)
         if(iNodeToFile[i].getDescriptor() == iNodeId)
-            return i;
+        {
+            num--;
+            if(num == 0)
+                return i;
+        }
     return -1;
 }
 // 寻找空闲下标
@@ -343,5 +358,14 @@ bool UserOpenList::deleteItem(int iNodeId)
 string UserOpenList::getUserName()
 {
     return username;
+}
+//计数
+int UserOpenList::count(int iNodeId)
+{
+    int count = 0;
+    for(int i = 0; i < MAX_USER_FD; i++)
+        if(iNodeToFile[i].getDescriptor() == iNodeId)
+            count++;
+    return count;
 }
 

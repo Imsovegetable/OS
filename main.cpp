@@ -5,12 +5,15 @@
 #include "directory.h"
 #include "help.h"
 #include "ram.h"
+#include "fileSys.h"
+#include "user.h"
+#include "inode.h"
 
 using namespace std;
 
 int main()
 {
-
+    
 	return 0;
 }
 

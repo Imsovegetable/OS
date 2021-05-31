@@ -151,7 +151,7 @@ void INodeList::FreeInvalidInode(int pos) {
     iNodeSize--;
 }
 
-INode INodeList::getInode(int id)
+INode& INodeList::getInode(int id)
 {
     return inodeList[id];
 }

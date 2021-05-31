@@ -88,6 +88,8 @@ public:
     void directoryCreate(const string &directoryName);
 
     void fileDelete(const string &fileName);
+
+    void createRootDirectory();
 };
 
 

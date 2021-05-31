@@ -48,7 +48,6 @@ void SuperBlock::createFile(const string& fileName, Directory* cur_dir)
 
 }
 
-
 //创建文件
 void fileSystem::fileCreate(const string& fileName)
 {
@@ -116,6 +115,7 @@ void SuperBlock::deleteDirectory(const string& directoryName, INode& dir, Direct
      * 在超级块中删除对应目录的函数主要包括删除对应i结点的位示图中的位置，在当前目录下删除要删除目录的键值对，在外存的i结点表中删除对应的i结点
      * */
     //位示图对应的点置为false
+    iNodeList.iNodeSize--;
     iNodeDistributeList[pos] = false;
     //在当前的目录的map键值对下删除对应的键值对
     directory.deleteItem(directoryName);
@@ -128,12 +128,14 @@ void SuperBlock::createDirectory(const string &directoryName, INode &dir, Direct
     /*
      * 在超级块中创建目录函数需要更新当前目录的map,更新外存i节点表,以及更新位示图
      * */
+    iNodeList.iNodeSize++;
     // 更新i结点位示图
     iNodeDistributeList[pos] = true;
     // 更新外存的i结点表
     iNodeList.inodeList[pos] = dir;
     // 更新键值对
     directory.addItem(directoryName, pos);
+
 }
 
 // 创建文件和目录的总体函数
@@ -197,15 +199,15 @@ void fileSystem::directoryCreate(const string &directoryName) {
     }
     //cur_id表示当前目录i结点的id
     int cur_id = pos;
-    //判断当前用户是否有创建和删除目录的权限
     INode newInode(1, getcurrentTime(), getcurrentTime(), current_user);
     //在directory进行init，设置当前目录的父目录和自身
     newInode.dir.init(cur_id, parent_id);
     //调用superBlock中的创建
-    if(superBlock.iNodeList.getInode(pos).inodeIsAuthor(current_user)){
+    if(superBlock.iNodeList.getInode(parent_id).inodeIsAuthor(current_user)){
         //调用超级块superblock中的create函数
         superBlock.createDirectory(directoryName, newInode, *users.getCurDir(), pos);
     }
+    users.setCurDir(&(superBlock.iNodeList.getInode(cur_id).dir));
 }
 
 //文件系统主类下面的删除目录函数
@@ -513,9 +515,44 @@ void fileSystem::createRootDirectory() {
     /*
      *根目录的创建不需要找到对应的父母i结点的id,分配在外存i结点表的第0号结点位置
      * */
+    superBlock.iNodeList.iNodeSize++;
     iNodeDistributeList[0] = true;
     INode RootInode(1, getcurrentTime(), getcurrentTime(), current_user);
     RootInode.dir.init(0, 0);
     superBlock.iNodeList.inodeList[0] = RootInode;
-
 }
+
+//创建用户目录
+int fileSystem::createUserDirectory(string username)
+{
+    int parent_id = 0;
+    //获取空闲的i结点
+    int pos = superBlock.iNodeList.getFreeInodeNum();
+    if(pos == -1){
+        cout << "the inodes has run out!" << endl;
+        return -1;
+    }
+    //cur_id表示当前目录i结点的id
+    int cur_id = pos;
+    //判断当前用户是否有创建和删除目录的权限
+    INode newInode(1, getcurrentTime(), getcurrentTime(), current_user);
+    //在directory进行init，设置当前目录的父目录和自身
+    newInode.dir.init(cur_id, parent_id);
+
+    superBlock.iNodeList.iNodeSize++;
+    // 更新i结点位示图
+    iNodeDistributeList[pos] = true;
+    // 更新外存的i结点表
+    superBlock.iNodeList.inodeList[pos] = newInode;
+    // 更新键值对
+    superBlock.iNodeList.getInode(0).dir.addItem(username, pos);
+
+    return pos;
+}
+// 初始化
+void fileSystem::init()
+{
+    createRootDirectory();
+}
+// 输出文件路径
+

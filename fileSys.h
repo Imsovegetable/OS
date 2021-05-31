@@ -90,8 +90,12 @@ public:
     void fileDelete(const string &fileName);
 
     void createRootDirectory();
-};
 
+    int createUserDirectory(string username);
+
+    void init();
+
+};
 
 extern fileSystem fileSys;
 

@@ -30,6 +30,8 @@ public:
     // 寻找id所对应的内存i结点的下标
     int searchNode(int id);
 
+    INode& getNode(int id);
+
     //xxx readSomeInfo(int id);
 
     bool updateInfo(int id);
@@ -59,7 +61,7 @@ public:
     // 获取偏移量
     int getOffset();
     // 设置偏移量
-    bool setOffset(int sign, int step);
+    bool setOffset(int offset);
     // 清空文件打开项
     void clear();
     // 获取链接数
@@ -93,6 +95,10 @@ public:
     bool deleteLink(int id);
     // 增加引用
     bool addLink(int id);
+    // 获取偏移量
+    int getOffset(int id);
+    // 设置偏移量
+    void setOffset(int id, int offset);
     // 添加某一项
     int addItem(int offset, int flags, int mode, int id);
     // 获取某一项的inode编号
@@ -105,8 +111,8 @@ public:
 
 class UserOpenItem{
 private:
-    int descriptor = -1;
-    int id = -1;
+    int descriptor = -1; // 其实是文件的磁盘inode号
+    int id = -1; // 对应系统文件打开表的下标
 
 public:
     UserOpenItem();
@@ -145,6 +151,8 @@ public:
     int searchId(int iNodeId);
     // 寻找空闲下标
     int searchFreeItem();
+    // 获取用户名
+    string getUserName();
 };
 
 

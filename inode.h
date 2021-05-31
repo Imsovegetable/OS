@@ -51,7 +51,7 @@ public:
     // 返回文件变化情况
     int differ();
     // 移除一个块
-    bool freeBlock();
+    int freeBlock();
     // 添加一个块
     bool addBlock(int id);
     // 获取块数
@@ -60,6 +60,10 @@ public:
     string getUser();
     // 清空inode
     void clear();
+
+    void addLink();
+
+    bool delLink();
     // 获取硬连接数
     int check();
     //计算i结点对应文件内容的大小
@@ -90,8 +94,8 @@ public:
     void FreeInvalidInode(int pos);
     //获取某个i结点的信息
     string getSpecificInodeInfo(int pos);
-    //修改某个i结点的信息
-    void UpdateInodeInfo(int pos);
+    //更新i结点
+    void UpdateInode(int id, INode ano);
     // 获取某个i结点
     INode getInode(int id);
 };

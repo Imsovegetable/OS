@@ -45,6 +45,14 @@ INode INodeListInRam::freeNode(int id)
     fileLock[i] = 0;
     return t;
 }
+INode& INodeListInRam::getNode(int id)
+{
+    int i = searchNode(id);
+    INode t;
+    if(i == -1)
+        return t;
+    return iNodeList[i];
+}
 // 寻找id所对应的内存i结点的下标
 int INodeListInRam::searchNode(int id)
 {
@@ -100,14 +108,9 @@ int FileOpenItem::getOffset()
 }
 
 // 设置偏移量
-bool FileOpenItem::setOffset(int sign, int step = 0)
+bool FileOpenItem::setOffset(int offset)
 {
-    if(sign == 1) // sign=1表示追加
-        offSet += step;
-    else if(sign == 2) // sign=2表示回到队首
-        offSet = 0;
-    else
-        return false;
+    this->offSet = offset;
     return true;
 }
 
@@ -166,8 +169,11 @@ bool FileOpenList::deleteLink(int id)
         return false;
     fileOpenList[id].dcrLink();
     if(fileOpenList[id].getLink() == 0)
+    {
         deleteItem(id);
-    return true;
+        return true;
+    }
+    return false;
 }
 
 // 增加引用
@@ -231,6 +237,17 @@ void FileOpenList::show()
         }
     cout << "\n——————————————————————\n";
 }
+// 获取偏移量
+int FileOpenList::getOffset(int id)
+{
+    return fileOpenList[id].getOffset();
+}
+// 设置偏移量
+void FileOpenList::setOffset(int id, int offset)
+{
+    fileOpenList[id].setOffset(offset);
+}
+
 
 
 UserOpenItem::UserOpenItem(){}
@@ -322,3 +339,9 @@ bool UserOpenList::deleteItem(int iNodeId)
     iNodeToFile[id].clear();
     return true;
 }
+// 获取用户名
+string UserOpenList::getUserName()
+{
+    return username;
+}
+

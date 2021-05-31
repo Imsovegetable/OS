@@ -3,8 +3,8 @@
 //
 
 #include "fileSys.h"
-#include "inode.h"
 
+SuperBlock::SuperBlock() {superGroup.init();}
 // 创建文件
 void SuperBlock::createFile(const string& fileName, Directory* cur_dir)
 {
@@ -162,4 +162,133 @@ void fileSystem::readInodeInfo()
 
     }
 
+}
+
+// 打开文件
+bool fileSystem::openFile(string fileName, int sign, int mode)
+{
+    // 获取当前目录
+    Directory* dir = users.getCurDir();
+    // 获取要打开文件的inode下标
+    int id = dir->getItem(fileName);
+    // 不存在该文件
+    if(id == -1)
+        return false;
+    // 获取要打开文件的内存i结点表下标
+    int id_ram = iNodeListInRam.searchNode(id);
+    // 该i结点未存入内存i节点表
+    if(id_ram == -1)
+    {
+        // 载入该i结点，若载入失败说明内存i节点表已满
+        if(!iNodeListInRam.loadNode(superBlock.iNodeList.getInode(id), id))
+            return false;
+    }
+    // 该i结点增加链接
+    iNodeListInRam.getNode(id).addLink();
+    int id_sys_list;
+    // 如果要以追加模式打开
+    if(sign == 1)
+        id_sys_list = fileOpenList.addItem(iNodeListInRam.getNode(id).size(), 0, mode, id);
+    else  // 从头开始读
+        id_sys_list = fileOpenList.addItem(0, 0, mode, id);
+    // 添加到系统文件打开表
+    if(userOpenList[current_user].getUserName() == "")
+    {
+        UserOpenList t1(current_user);
+        userOpenList[current_user] = t1;
+    }
+    // 添加到用户文件打开表, 如果失败说明用户文件打开表已经满了
+    if(!userOpenList[current_user].addItem(id, id_sys_list))
+    {
+        return false;
+    }
+    return true;
+}
+
+// 关闭文件
+bool fileSystem::closeFile(string fileName)
+{
+    // 获取当前目录
+    Directory* dir = users.getCurDir();
+    // 获取要关闭文件的inode下标
+    int id = dir->getItem(fileName);
+    if(id == -1)
+        return false;
+    // 获取该文件在系统打开表中的下标
+    int id_sys_list = userOpenList[current_user].getFileId(id);
+    // 在用户打开表中删除这一项
+    userOpenList[current_user].deleteItem(id);
+    // 在系统文件打开表中删除引用，如果引用项只有一个，则删除该项
+    bool sign1 = fileOpenList.deleteLink(id_sys_list);
+    bool sign;
+    if(sign1)
+    {
+        // 如果引用项只有一个，则删除该项后还需要删除内存i结点表的引用
+        sign = iNodeListInRam.getNode(id).delLink();
+        if (sign)
+        {
+            // 如果内存i结点表的引用只有这一个，则释放该结点
+            INode t = iNodeListInRam.freeNode(id);
+            superBlock.iNodeList.UpdateInode(id, t);
+        }
+    }
+    return true;
+}
+
+
+// 读取文件
+string fileSystem::readFile(string fileName, int len)
+{
+    // 获取当前目录
+    Directory* dir = users.getCurDir();
+    // 获取要读取文件的inode下标
+    int id = dir->getItem(fileName);
+    //
+    int id_sys_list = userOpenList[current_user].getFileId(id);
+    if(id_sys_list == -1)
+        return "";
+    // 获取当前偏移量
+    int offset = fileOpenList.getOffset(id_sys_list);
+    // 设置读取后的偏移量
+    fileOpenList.setOffset(id, offset + len);
+    // 输出读取的内容
+    string out = iNodeListInRam.getNode(id).content.substr(offset, len);
+    return out;
+}
+
+// 写入文件
+bool fileSystem::writeFile(string fileName, string content)
+{
+    // 获取当前目录
+    Directory* dir = users.getCurDir();
+    // 获取要读取文件的inode下标
+    int id = dir->getItem(fileName);
+    // 获取系统文件打开表下标
+    int id_sys_list = userOpenList[current_user].getFileId(id);
+    if(id_sys_list == -1)
+        return "";
+    // 获取文件偏移量
+    int offset = fileOpenList.getOffset(id_sys_list);
+    // 拼接写入后的字符串
+    string in1 = iNodeListInRam.getNode(id).content.substr(0, offset);
+    string in2 = iNodeListInRam.getNode(id).content.substr(offset, iNodeListInRam.getNode(id).content.size() - offset);
+    string out = in1 + content + in2;
+    iNodeListInRam.getNode(id).content = out;
+    // 计算大小变化
+    int n = out.size() - iNodeListInRam.getNode(id).size();
+    // 分配新的块
+    while(n > 0)
+    {
+        int bid = superBlock.superGroup.getFreeBlock();
+        iNodeListInRam.getNode(id).addBlock(bid);
+        n--;
+    }
+    while(n < 0)
+    {
+        int bid = iNodeListInRam.getNode(id).freeBlock();
+        superBlock.superGroup.addNewBlock(bid);
+        n++;
+    }
+    iNodeListInRam.getNode(id).updateFileSize();
+    return true;
 }

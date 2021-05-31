@@ -65,15 +65,16 @@ bool NormalIndex::dropIndex(int n)
 }
 
 // 删除最后一个索引
-bool NormalIndex::dropIndex()
+int NormalIndex::dropIndex()
 {
     if(indexSize > 0)
     {
+        int t = indexes.back();
         indexes.pop_back();
         indexSize--;
-        return true;
+        return t;
     }
-    return false;
+    return -1;
 }
 
 // 从索引块中获取第n个下一级索引表
@@ -322,10 +323,10 @@ void MixIndex::show()
 }
 
 // 删除一个索引
-bool MixIndex::dropIndex()
+int MixIndex::dropIndex()
 {
     if(indexSize <= 0)
-        return false;
+        return -1;
     else if(indexSize <= BASIC_IDX) // 直接索引
         return dropDirectIndex();
     else if(indexSize <= BASIC_IDX + IDXT_SIZE) // 一次间接索引
@@ -337,42 +338,43 @@ bool MixIndex::dropIndex()
 }
 
 // 删除直接索引
-bool MixIndex::dropDirectIndex()
+int MixIndex::dropDirectIndex()
 {
+    int t = indexes.back();
     indexes.pop_back();
     indexSize--;
-    return true;
+    return t;
 }
 
 // 删除一次间接索引
-bool MixIndex::dropOneInDirectIndex()
+int MixIndex::dropOneInDirectIndex()
 {
-    oneIndirectIndex.dropIndex();
+    int t = oneIndirectIndex.dropIndex();
     indexSize--;
-    return true;
+    return t;
 }
 
 // 删除二次间接索引
-bool MixIndex::dropTwoInDirectIndex()
+int MixIndex::dropTwoInDirectIndex()
 {
     // 计算超出前两部分的索引数量
     int n = indexSize - BASIC_IDX - IDXT_SIZE - 1; //这里的减一非常重要！因为size是从1开始的，下标则是从0开始，导致除法时跳到下一个块
     // 找到对应的二次间址索引块
-    twoIndirectIndex.getNxtIndex(n / IDXT_SIZE).dropIndex();
+    int t = twoIndirectIndex.getNxtIndex(n / IDXT_SIZE).dropIndex();
     indexSize--;
     // 此处n的含义应是数量而不是下标，因此要把减一补偿回来
     if((n + 1) % IDXT_SIZE == 1) // 如果删除的正好是二次间址索引块的最后一个索引
         twoIndirectIndex.dropNxtIndex(); // 把索引块也删除
-    return true;
+    return t;
 }
 
 // 删除三次间接索引
-bool MixIndex::dropThreeInDirectIndex()
+int MixIndex::dropThreeInDirectIndex()
 {
     // 计算超出前三部分的索引数量
     int n = indexSize - BASIC_IDX - IDXT_SIZE - ONE_IDXT_SIZE - 1;// 同上，一定要减一
     // 找到对应的三次间址索引块
-    threeIndirectIndex.getNxtIndex(n / ONE_IDXT_SIZE).getNxtIndex((n % ONE_IDXT_SIZE) / IDXT_SIZE).dropIndex();
+    int t = threeIndirectIndex.getNxtIndex(n / ONE_IDXT_SIZE).getNxtIndex((n % ONE_IDXT_SIZE) / IDXT_SIZE).dropIndex();
     indexSize--;
     // 此处n的含义应是数量而不是下标，因此要把减一补偿回来
     if(((n + 1) % ONE_IDXT_SIZE) % IDXT_SIZE == 1) // 如果删除的正好是三次间址索引块的最后一个索引
@@ -380,7 +382,7 @@ bool MixIndex::dropThreeInDirectIndex()
     // 此处n的含义应是数量而不是下标，因此要把减一补偿回来
     if((n + 1) % ONE_IDXT_SIZE == 1) // 如果删除的正好是二次间址索引块的最后一个索引
         threeIndirectIndex.dropNxtIndex(); // 把这个二次间址索引块也删除
-    return true;
+    return t;
 }
 
 //清空

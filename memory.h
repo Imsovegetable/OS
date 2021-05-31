@@ -34,7 +34,7 @@ public:
     // 从索引块中删除n个索引
     bool dropIndex(int n);
     // 删除最后一个索引
-    bool dropIndex();
+    int dropIndex();
 
     //作为中间索引的功能
     // 从索引块中获取第n个下一级索引表
@@ -75,13 +75,13 @@ private:
     // 添加三次间接索引
     bool addThreeIndirectIndex(int id);
     // 删除直接索引
-    bool dropDirectIndex();
+    int dropDirectIndex();
     // 删除一次间接索引
-    bool dropOneInDirectIndex();
+    int dropOneInDirectIndex();
     // 删除二次间接索引
-    bool dropTwoInDirectIndex();
+    int dropTwoInDirectIndex();
     // 删除三次间接索引
-    bool dropThreeInDirectIndex();
+    int dropThreeInDirectIndex();
 
 public:
     MixIndex();
@@ -96,7 +96,7 @@ public:
     // 展示信息
     void show();
     // 删除一个索引
-    bool dropIndex();
+    int dropIndex();
     // 清空信息
     void clear();
     // 获取所有索引

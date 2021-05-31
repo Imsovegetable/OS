@@ -53,7 +53,10 @@ INode& INode::operator=(const INode& B)
 //更新i结点的相关信息
 void INode::updateFileSize()
 {
-
+    if(type == 1)
+        fileLen = sizeof(dir);
+    else
+        fileLen = content.size();
 }
 // 返回文件大小
 int INode::size() const
@@ -72,9 +75,9 @@ int INode::differ()
     return t;
 }
 // 移除一个块
-bool INode::freeBlock()
+int INode::freeBlock()
 {
-    return (indexT.dropIndex()) ? (diskSize--, true):(false);
+    return indexT.dropIndex();
 }
 // 添加一个块
 bool INode::addBlock(int id)
@@ -103,6 +106,11 @@ void INode::clear()
     i_Nlink = 0;
     content = "";
     indexT.clear();
+}
+//更新i结点
+void INodeList::UpdateInode(int id, INode ano)
+{
+    inodeList[id] = ano;
 }
 //计算i结点对应文件内容的大小
 int INode::calculateFileSize(const string& filename)
@@ -136,15 +144,6 @@ bool INodeList::addNewINode(INode A, int i) {
     return true;
 }
 
-void INodeList::UpdateInodeInfo(int pos) {
-//    time_t now = time(nullptr);
-//    // 把 now 转换为字符串形式
-//    char* dt = ctime(&now);
-//    string updateTime = dt;
-//    inodeList[pos].updateTime = updateTime;
-//    //其他修改的信息还没写！！！！
-
-}
 
 void INodeList::FreeInvalidInode(int pos) {
     iNodeDistributeList[pos] = false;
@@ -172,6 +171,20 @@ string INode::save_as_string() {
 
 int INode::getType() {
     return type;
+}
+
+void INode::addLink()
+{
+    i_Nlink++;
+}
+
+bool INode::delLink()
+{
+    i_Nlink--;
+    if(i_Nlink == 0)
+        return true;
+    else
+        return false;
 }
 
 void INode::saveDiskNumber(const vector<int>& numberSet) {

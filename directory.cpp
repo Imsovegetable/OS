@@ -51,7 +51,7 @@ bool Directory::checkItem(string filename)
 int Directory::getItem(string filename)
 {
     if(directory[filename] == 0)
-        return 0;
+        return -1;
     else
         return directory[filename];
 }

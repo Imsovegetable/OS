@@ -3,6 +3,12 @@
 //
 
 #include "help.h"
+#include <windows.h>
+#include <tchar.h>
+#include <iostream>
+#include <string>
+#include <cstdio>
+using namespace std;
 
 int statistic(const string& filename)
 {
@@ -20,4 +26,14 @@ extern string getcurrentTime()
     char *dt = ctime(&now);
     string current_time = string(dt);
     return current_time;
+}
+
+//获取本地电脑主机名，用来进行菜单显示
+extern string getLocalIpName() {
+    TCHAR buf[MAX_COMPUTERNAME_LENGTH + 2];
+    DWORD buf_size;
+    buf_size = sizeof buf - 1;
+    GetComputerName(buf, &buf_size);
+    string a = buf;
+    return a;
 }

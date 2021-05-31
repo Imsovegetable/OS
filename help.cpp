@@ -10,6 +10,8 @@
 #include <cstdio>
 using namespace std;
 
+
+
 int statistic(const string& filename)
 {
     ifstream fin(filename);

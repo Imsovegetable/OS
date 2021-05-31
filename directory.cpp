@@ -51,7 +51,7 @@ bool Directory::checkItem(string filename)
 int Directory::getItem(string filename)
 {
     if(directory[filename] == 0)
-        return 0;
+        return -1;
     else
         return directory[filename];
 }
@@ -101,4 +101,14 @@ string Directory::save_as_string_dir() {
         ans += (to_string(iter->second) + '\n');
     }
     return ans;
+}
+
+string Directory::getFileName(int id)
+{
+    for(auto& it:directory)
+    {
+        if(it.second == id)
+            return it.first;
+    }
+    return "";
 }

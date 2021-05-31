@@ -28,9 +28,17 @@ public:
     //其他待补充！！！
     //为创建文件分配一个i结点
     //在超级块中的相关创建文件函数
-    void createFile(const string& fileName, INode& A);
+    void createFile(const string& fileName, INode& A, Directory& directory);
     //在超级块中的相关删除文件函数
-    void deleteFile(const string& fileName);
+    void deleteFile(const string& fileName, Directory& directory);
+    //超级块中创建目录函数
+    void createDirectory(const string &directoryName, INode &dir, Directory& directory, int pos);
+    //超级块中删除目录函数
+    void deleteDirectory(const string& directoryName, INode& dir, Directory& directory, int pos);
+    // 创建目录和文件的i结点的总体函数
+    void createFileAndDirectory();
+    // 删除目录和文件的总体函数
+    void deleteFileAndDirectory();
 
 };
 
@@ -38,10 +46,9 @@ class fileSystem{
 public:
     //超级块
     SuperBlock superBlock;
-
     // 用户列表
     Users users;
-
+    //文件系统内存i结点表
     INodeListInRam iNodeListInRam;
     //创建文件
     void fileCreate(const string& fileName);
@@ -55,15 +62,15 @@ public:
     void saveInodeInfo();
     //读取所有i结点的信息，在用户登录之后调用以读取所以的i结点信息
     void readInodeInfo();
-    //
+    //新建目录
     void openFile(string fileName);
 };
 
-void fileSystem::openFile(string fileName)
-{
-    Directory* dir = users.getCurDir();
-    int id = 1;
-}
+//void fileSystem::openFile(string fileName)
+//{
+//    Directory* dir = users.getCurDir();
+//    int id = 1;
+//}
 
 
 #endif //OS_FILESYS_H

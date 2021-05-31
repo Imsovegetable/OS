@@ -3,7 +3,7 @@
 //
 
 #include "user.h"
-
+#include <bits/stdc++.h>
 string current_user = "";
 
 User::User(){}
@@ -74,7 +74,11 @@ void Users::readUserList()
         exit(0);
     }
     string line;
-    while(getline(file, line)){
+    int cnt;
+    getline(file, line);
+    userListSize = atoi(line.c_str());
+    for(int i=0; i<userListSize; i++){
+        getline(file, line);
         string username = line;
         getline(file, line);
         string password = line;
@@ -95,9 +99,7 @@ bool Users::IsExistedAuthor(const string& username)
     return false;
 }
 
-
 //bool Users::fileIsAuthor(int inodeNum, const string& username){
-//
 //
 //
 //}
@@ -122,6 +124,7 @@ void Users::saveUser()
         cout<<"users.txt can not open in createUser function "<<endl;
         exit(0);
     }
+    file << userList.size() << endl;
     for(auto & i : userList){
         file<<i.getUsername()<<endl;
         file<<i.getPassword()<<endl;

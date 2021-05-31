@@ -15,16 +15,27 @@ int main()
 
     cout << getLocalIpName() << endl;
     fileSystem sys;
-    int a = sys.superBlock.iNodeList.getFreeInodeNum();
-    INode A(1, getcurrentTime(), getcurrentTime(), "cyhdsb");
-    sys.superBlock.iNodeList.inodeList[a] = A;
-    iNodeDistributeList[a] = true;
-    //INode B(1, getcurrentTime(), getcurrentTime(), "cyhdsb");
+    sys.users.readUserList();
+    ///sys.users.createUser("cyn", "dsb");
+    sys.users.login("cyn", "dsb");
+    current_user = "cyn";
+    cout<<sys.users.userList[0].getUsername()<<endl;
+
+    sys.directoryCreate("mnt");
+    //sys.users.setCurDir();
+    sys.users.saveUser();
+    //sys.directoryCreate("mnt");
+
+//    int a = sys.superBlock.iNodeList.getFreeInodeNum();
+//    INode A(1, getcurrentTime(), getcurrentTime(), "cyhdsb");
+//    sys.superBlock.iNodeList.inodeList[a] = A;
+//    iNodeDistributeList[a] = true;
+//    //INode B(1, getcurrentTime(), getcurrentTime(), "cyhdsb");
     sys.saveInodeInfo();
-    INode B(0, getcurrentTime(), getcurrentTime(), "ca");
-    sys.superBlock.iNodeList.inodeList[a] = B;
-    sys.readInodeInfo();
-    cout<<sys.superBlock.iNodeList.inodeList[0].getUser()<<endl;
+//    INode B(0, getcurrentTime(), getcurrentTime(), "ca");
+//    sys.superBlock.iNodeList.inodeList[a] = B;
+//    sys.readInodeInfo();
+//    cout<<sys.superBlock.iNodeList.inodeList[0].getUser()<<endl;
 //    MixIndex index;
 //    for(int i = 1; i <= 16; i++)
 //        index.addIndex(i);

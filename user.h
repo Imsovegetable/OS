@@ -48,11 +48,10 @@ extern string current_user;
 //把user的表读到用户数组中去
 class Users{
 private:
-    vector<User> userList;
-
     int userListSize = 0;
 
 public:
+    vector<User> userList;
     //计算文件大小
     int calculateFileSize(const string& filename);
     // 读取用户列表

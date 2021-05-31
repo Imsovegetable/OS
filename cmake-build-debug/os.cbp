@@ -8,135 +8,135 @@
 		<Option virtualFolders="CMake Files\;"/>
 		<Build>
 			<Target title="all">
-				<Option working_dir="C:/Users/Chen Yining/CLionProjects/OS/cmake-build-debug"/>
+				<Option working_dir="D:/os/cmake-build-debug"/>
 				<Option type="4"/>
 				<MakeCommands>
-					<Build command="C:/Download/mingw64/bin/mingw32-make.exe -f &quot;C:/Users/Chen Yining/CLionProjects/OS/cmake-build-debug/Makefile&quot;  VERBOSE=1 all"/>
-					<CompileFile command="C:/Download/mingw64/bin/mingw32-make.exe -f &quot;C:/Users/Chen Yining/CLionProjects/OS/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="C:/Download/mingw64/bin/mingw32-make.exe -f &quot;C:/Users/Chen Yining/CLionProjects/OS/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="C:/Download/mingw64/bin/mingw32-make.exe -f &quot;C:/Users/Chen Yining/CLionProjects/OS/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="D:/MinGW/mingw64/bin/mingw32-make.exe -f &quot;D:/os/cmake-build-debug/Makefile&quot;  VERBOSE=1 all"/>
+					<CompileFile command="D:/MinGW/mingw64/bin/mingw32-make.exe -f &quot;D:/os/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="D:/MinGW/mingw64/bin/mingw32-make.exe -f &quot;D:/os/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="D:/MinGW/mingw64/bin/mingw32-make.exe -f &quot;D:/os/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="os">
-				<Option output="C:/Users/Chen Yining/CLionProjects/OS/cmake-build-debug/os.exe" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir="C:/Users/Chen Yining/CLionProjects/OS/cmake-build-debug"/>
+				<Option output="D:/os/cmake-build-debug/os.exe" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="D:/os/cmake-build-debug"/>
 				<Option object_output="./"/>
 				<Option type="1"/>
 				<Option compiler="gcc"/>
 				<Compiler>
-					<Add directory="C:/Users/Chen Yining/CLionProjects/OS/."/>
-					<Add directory="C:/Download/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/8.1.0/include/c++"/>
-					<Add directory="C:/Download/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/8.1.0/include/c++/x86_64-w64-mingw32"/>
-					<Add directory="C:/Download/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/8.1.0/include/c++/backward"/>
-					<Add directory="C:/Download/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/8.1.0/include"/>
-					<Add directory="C:/Download/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/8.1.0/include-fixed"/>
-					<Add directory="C:/Download/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/8.1.0/../../../../x86_64-w64-mingw32/include"/>
+					<Add directory="D:/os/."/>
+					<Add directory="D:/MinGW/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/8.1.0/include/c++"/>
+					<Add directory="D:/MinGW/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/8.1.0/include/c++/x86_64-w64-mingw32"/>
+					<Add directory="D:/MinGW/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/8.1.0/include/c++/backward"/>
+					<Add directory="D:/MinGW/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/8.1.0/include"/>
+					<Add directory="D:/MinGW/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/8.1.0/include-fixed"/>
+					<Add directory="D:/MinGW/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/8.1.0/../../../../x86_64-w64-mingw32/include"/>
 				</Compiler>
 				<MakeCommands>
-					<Build command="C:/Download/mingw64/bin/mingw32-make.exe -f &quot;C:/Users/Chen Yining/CLionProjects/OS/cmake-build-debug/Makefile&quot;  VERBOSE=1 os"/>
-					<CompileFile command="C:/Download/mingw64/bin/mingw32-make.exe -f &quot;C:/Users/Chen Yining/CLionProjects/OS/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="C:/Download/mingw64/bin/mingw32-make.exe -f &quot;C:/Users/Chen Yining/CLionProjects/OS/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="C:/Download/mingw64/bin/mingw32-make.exe -f &quot;C:/Users/Chen Yining/CLionProjects/OS/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="D:/MinGW/mingw64/bin/mingw32-make.exe -f &quot;D:/os/cmake-build-debug/Makefile&quot;  VERBOSE=1 os"/>
+					<CompileFile command="D:/MinGW/mingw64/bin/mingw32-make.exe -f &quot;D:/os/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="D:/MinGW/mingw64/bin/mingw32-make.exe -f &quot;D:/os/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="D:/MinGW/mingw64/bin/mingw32-make.exe -f &quot;D:/os/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="os/fast">
-				<Option output="C:/Users/Chen Yining/CLionProjects/OS/cmake-build-debug/os.exe" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir="C:/Users/Chen Yining/CLionProjects/OS/cmake-build-debug"/>
+				<Option output="D:/os/cmake-build-debug/os.exe" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="D:/os/cmake-build-debug"/>
 				<Option object_output="./"/>
 				<Option type="1"/>
 				<Option compiler="gcc"/>
 				<Compiler>
-					<Add directory="C:/Users/Chen Yining/CLionProjects/OS/."/>
-					<Add directory="C:/Download/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/8.1.0/include/c++"/>
-					<Add directory="C:/Download/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/8.1.0/include/c++/x86_64-w64-mingw32"/>
-					<Add directory="C:/Download/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/8.1.0/include/c++/backward"/>
-					<Add directory="C:/Download/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/8.1.0/include"/>
-					<Add directory="C:/Download/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/8.1.0/include-fixed"/>
-					<Add directory="C:/Download/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/8.1.0/../../../../x86_64-w64-mingw32/include"/>
+					<Add directory="D:/os/."/>
+					<Add directory="D:/MinGW/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/8.1.0/include/c++"/>
+					<Add directory="D:/MinGW/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/8.1.0/include/c++/x86_64-w64-mingw32"/>
+					<Add directory="D:/MinGW/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/8.1.0/include/c++/backward"/>
+					<Add directory="D:/MinGW/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/8.1.0/include"/>
+					<Add directory="D:/MinGW/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/8.1.0/include-fixed"/>
+					<Add directory="D:/MinGW/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/8.1.0/../../../../x86_64-w64-mingw32/include"/>
 				</Compiler>
 				<MakeCommands>
-					<Build command="C:/Download/mingw64/bin/mingw32-make.exe -f &quot;C:/Users/Chen Yining/CLionProjects/OS/cmake-build-debug/Makefile&quot;  VERBOSE=1 os/fast"/>
-					<CompileFile command="C:/Download/mingw64/bin/mingw32-make.exe -f &quot;C:/Users/Chen Yining/CLionProjects/OS/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="C:/Download/mingw64/bin/mingw32-make.exe -f &quot;C:/Users/Chen Yining/CLionProjects/OS/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="C:/Download/mingw64/bin/mingw32-make.exe -f &quot;C:/Users/Chen Yining/CLionProjects/OS/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="D:/MinGW/mingw64/bin/mingw32-make.exe -f &quot;D:/os/cmake-build-debug/Makefile&quot;  VERBOSE=1 os/fast"/>
+					<CompileFile command="D:/MinGW/mingw64/bin/mingw32-make.exe -f &quot;D:/os/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="D:/MinGW/mingw64/bin/mingw32-make.exe -f &quot;D:/os/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="D:/MinGW/mingw64/bin/mingw32-make.exe -f &quot;D:/os/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="edit_cache">
-				<Option working_dir="C:/Users/Chen Yining/CLionProjects/OS/cmake-build-debug"/>
+				<Option working_dir="D:/os/cmake-build-debug"/>
 				<Option type="4"/>
 				<MakeCommands>
-					<Build command="C:/Download/mingw64/bin/mingw32-make.exe -f &quot;C:/Users/Chen Yining/CLionProjects/OS/cmake-build-debug/Makefile&quot;  VERBOSE=1 edit_cache"/>
-					<CompileFile command="C:/Download/mingw64/bin/mingw32-make.exe -f &quot;C:/Users/Chen Yining/CLionProjects/OS/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="C:/Download/mingw64/bin/mingw32-make.exe -f &quot;C:/Users/Chen Yining/CLionProjects/OS/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="C:/Download/mingw64/bin/mingw32-make.exe -f &quot;C:/Users/Chen Yining/CLionProjects/OS/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="D:/MinGW/mingw64/bin/mingw32-make.exe -f &quot;D:/os/cmake-build-debug/Makefile&quot;  VERBOSE=1 edit_cache"/>
+					<CompileFile command="D:/MinGW/mingw64/bin/mingw32-make.exe -f &quot;D:/os/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="D:/MinGW/mingw64/bin/mingw32-make.exe -f &quot;D:/os/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="D:/MinGW/mingw64/bin/mingw32-make.exe -f &quot;D:/os/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="rebuild_cache">
-				<Option working_dir="C:/Users/Chen Yining/CLionProjects/OS/cmake-build-debug"/>
+				<Option working_dir="D:/os/cmake-build-debug"/>
 				<Option type="4"/>
 				<MakeCommands>
-					<Build command="C:/Download/mingw64/bin/mingw32-make.exe -f &quot;C:/Users/Chen Yining/CLionProjects/OS/cmake-build-debug/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
-					<CompileFile command="C:/Download/mingw64/bin/mingw32-make.exe -f &quot;C:/Users/Chen Yining/CLionProjects/OS/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="C:/Download/mingw64/bin/mingw32-make.exe -f &quot;C:/Users/Chen Yining/CLionProjects/OS/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="C:/Download/mingw64/bin/mingw32-make.exe -f &quot;C:/Users/Chen Yining/CLionProjects/OS/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="D:/MinGW/mingw64/bin/mingw32-make.exe -f &quot;D:/os/cmake-build-debug/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
+					<CompileFile command="D:/MinGW/mingw64/bin/mingw32-make.exe -f &quot;D:/os/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="D:/MinGW/mingw64/bin/mingw32-make.exe -f &quot;D:/os/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="D:/MinGW/mingw64/bin/mingw32-make.exe -f &quot;D:/os/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 		</Build>
-		<Unit filename="C:/Users/Chen Yining/CLionProjects/OS/GODNING.h">
+		<Unit filename="D:/os/GODNING.h">
 			<Option target="os"/>
 		</Unit>
-		<Unit filename="C:/Users/Chen Yining/CLionProjects/OS/directory.cpp">
+		<Unit filename="D:/os/directory.cpp">
 			<Option target="os"/>
 		</Unit>
-		<Unit filename="C:/Users/Chen Yining/CLionProjects/OS/directory.h">
+		<Unit filename="D:/os/directory.h">
 			<Option target="os"/>
 		</Unit>
-		<Unit filename="C:/Users/Chen Yining/CLionProjects/OS/fileSys.cpp">
+		<Unit filename="D:/os/fileSys.cpp">
 			<Option target="os"/>
 		</Unit>
-		<Unit filename="C:/Users/Chen Yining/CLionProjects/OS/fileSys.h">
+		<Unit filename="D:/os/fileSys.h">
 			<Option target="os"/>
 		</Unit>
-		<Unit filename="C:/Users/Chen Yining/CLionProjects/OS/gcm.cpp">
+		<Unit filename="D:/os/gcm.cpp">
 			<Option target="os"/>
 		</Unit>
-		<Unit filename="C:/Users/Chen Yining/CLionProjects/OS/gcm.h">
+		<Unit filename="D:/os/gcm.h">
 			<Option target="os"/>
 		</Unit>
-		<Unit filename="C:/Users/Chen Yining/CLionProjects/OS/help.cpp">
+		<Unit filename="D:/os/help.cpp">
 			<Option target="os"/>
 		</Unit>
-		<Unit filename="C:/Users/Chen Yining/CLionProjects/OS/help.h">
+		<Unit filename="D:/os/help.h">
 			<Option target="os"/>
 		</Unit>
-		<Unit filename="C:/Users/Chen Yining/CLionProjects/OS/inode.cpp">
+		<Unit filename="D:/os/inode.cpp">
 			<Option target="os"/>
 		</Unit>
-		<Unit filename="C:/Users/Chen Yining/CLionProjects/OS/inode.h">
+		<Unit filename="D:/os/inode.h">
 			<Option target="os"/>
 		</Unit>
-		<Unit filename="C:/Users/Chen Yining/CLionProjects/OS/main.cpp">
+		<Unit filename="D:/os/main.cpp">
 			<Option target="os"/>
 		</Unit>
-		<Unit filename="C:/Users/Chen Yining/CLionProjects/OS/memory.cpp">
+		<Unit filename="D:/os/memory.cpp">
 			<Option target="os"/>
 		</Unit>
-		<Unit filename="C:/Users/Chen Yining/CLionProjects/OS/memory.h">
+		<Unit filename="D:/os/memory.h">
 			<Option target="os"/>
 		</Unit>
-		<Unit filename="C:/Users/Chen Yining/CLionProjects/OS/ram.cpp">
+		<Unit filename="D:/os/ram.cpp">
 			<Option target="os"/>
 		</Unit>
-		<Unit filename="C:/Users/Chen Yining/CLionProjects/OS/ram.h">
+		<Unit filename="D:/os/ram.h">
 			<Option target="os"/>
 		</Unit>
-		<Unit filename="C:/Users/Chen Yining/CLionProjects/OS/user.cpp">
+		<Unit filename="D:/os/user.cpp">
 			<Option target="os"/>
 		</Unit>
-		<Unit filename="C:/Users/Chen Yining/CLionProjects/OS/user.h">
+		<Unit filename="D:/os/user.h">
 			<Option target="os"/>
 		</Unit>
-		<Unit filename="C:/Users/Chen Yining/CLionProjects/OS/CMakeLists.txt">
+		<Unit filename="D:/os/CMakeLists.txt">
 			<Option virtualFolder="CMake Files\"/>
 		</Unit>
 	</Project>

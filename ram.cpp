@@ -1,16 +1,16 @@
 //
-// Created by æ—§åŸç­±é›¨ on 2021/5/27.
+// Created by ¾É³ÇóãÓê on 2021/5/27.
 //
 
 #include "ram.h"
 
-// æ„é€ å‡½æ•°
+// ¹¹Ôìº¯Êı
 INodeListInRam::INodeListInRam()
 {
     for(int i = 0; i < INODET_IN_RAM; i++)
-        iNodeNum[i] = -1;
+        iNodeNum[i] = -1, fileLock[i] = 0;
 }
-// è·å–ç©ºçš„å†…å­˜iç»“ç‚¹
+// »ñÈ¡¿ÕµÄÄÚ´æi½áµã
 int INodeListInRam::getFreeNode()
 {
     for(int i = 0; i < INODET_IN_RAM; i++)
@@ -22,7 +22,7 @@ int INodeListInRam::getFreeNode()
     }
     return -1;
 }
-// åŠ è½½ä¸€ä¸ªiç»“ç‚¹
+// ¼ÓÔØÒ»¸öi½áµã
 bool INodeListInRam::loadNode(INode A, int id)
 {
     int i = getFreeNode();
@@ -32,7 +32,7 @@ bool INodeListInRam::loadNode(INode A, int id)
     iNodeNum[i] = id;
     return true;
 }
-// é‡Šæ”¾ä¸€ä¸ªiç»“ç‚¹
+// ÊÍ·ÅÒ»¸öi½áµã
 INode INodeListInRam::freeNode(int id)
 {
     INode t;
@@ -42,13 +42,283 @@ INode INodeListInRam::freeNode(int id)
     t = iNodeList[i];
     iNodeList[i].clear();
     iNodeNum[i] = -1;
+    fileLock[i] = 0;
     return t;
 }
-// å¯»æ‰¾idæ‰€å¯¹åº”çš„å†…å­˜iç»“ç‚¹çš„ä¸‹æ ‡
+// Ñ°ÕÒidËù¶ÔÓ¦µÄÄÚ´æi½áµãµÄÏÂ±ê
 int INodeListInRam::searchNode(int id)
 {
     for(int i = 0; i < INODET_IN_RAM; i++)
         if(iNodeNum[i] == id)
             return i;
     return -1;
+}
+// ÓÃ»§username¶ÔÏÂ±êÎªidµÄinode¶ÔÓ¦µÄÎÄ¼ş¼ÓËø
+bool INodeListInRam::setLock(string username, int lock, int id)
+{
+    if(lock < 0 || lock > 2)
+        return false;
+    int i = searchNode(id);
+    if(iNodeList[i].getUser() == username)
+        fileLock[i] = lock;
+    else
+        return false;
+    return true;
+}
+
+
+
+// ¿Õ¹¹Ôìº¯Êı
+FileOpenItem::FileOpenItem(){}
+
+// ¸´ÖÆ¹¹Ôìº¯Êı
+FileOpenItem::FileOpenItem(FileOpenItem &ano)
+: offSet(ano.offSet)
+, linkN(ano.linkN)
+, flags(ano.flags)
+, mode(ano.mode)
+, id(ano.id){}
+
+// ¸³Öµ¹¹Ôìº¯Êı
+FileOpenItem::FileOpenItem(int offset, int flags, int mode, int id)
+: offSet(offset)
+, linkN(1)
+, flags(flags)
+, mode(mode)
+, id(id){}
+
+// »ñÈ¡inodeµÄid
+int FileOpenItem::getId()
+{
+    return id;
+}
+
+// »ñÈ¡Æ«ÒÆÁ¿
+int FileOpenItem::getOffset()
+{
+    return offSet;
+}
+
+// ÉèÖÃÆ«ÒÆÁ¿
+bool FileOpenItem::setOffset(int sign, int step = 0)
+{
+    if(sign == 1) // sign=1±íÊ¾×·¼Ó
+        offSet += step;
+    else if(sign == 2) // sign=2±íÊ¾»Øµ½¶ÓÊ×
+        offSet = 0;
+    else
+        return false;
+    return true;
+}
+
+// Çå¿ÕÎÄ¼ş´ò¿ªÏî
+void FileOpenItem::clear()
+{
+    offSet = flags = mode = linkN = 0;
+    id = -1;
+}
+
+// »ñÈ¡Á´½ÓÊı
+int FileOpenItem::getLink()
+{
+    return linkN;
+}
+
+// Ôö¼ÓÁ´½Ó
+void FileOpenItem::icrLink()
+{
+    linkN++;
+}
+
+// ¼õÉÙÁ´½Ó
+void FileOpenItem::dcrLink()
+{
+    linkN--;
+}
+
+//ÏÔÊ¾ĞÅÏ¢
+void FileOpenItem::show()
+{
+    cout << "offset = " << offSet << ",linkN = " << linkN << ",flag = " << flags << ",mode = " << mode << ",id = " << id;
+}
+
+
+
+int FileOpenList::size()
+{
+    return fileOpenSize;
+}
+// Çå¿Õ
+void FileOpenList::clear()
+{
+    for(int i = 0; i < MAX_FDS; i++)
+    {
+        if(fileOpenList[i].getLink() > 0)
+            fileOpenList[i].clear();
+    }
+    fileOpenSize = 0;
+}
+
+// É¾³ıÒıÓÃ
+bool FileOpenList::deleteLink(int id)
+{
+    if(fileOpenList[id].getLink() <= 0)
+        return false;
+    fileOpenList[id].dcrLink();
+    if(fileOpenList[id].getLink() == 0)
+        deleteItem(id);
+    return true;
+}
+
+// Ôö¼ÓÒıÓÃ
+bool FileOpenList::addLink(int id)
+{
+    if(fileOpenList[id].getLink() < 0)
+        return false;
+    fileOpenList[id].icrLink();
+    return true;
+}
+
+// É¾³ıÄ³Ò»Ïî
+bool FileOpenList::deleteItem(int id)
+{
+    if(fileOpenList[id].getLink() < 0)
+        return false;
+    fileOpenList[id].clear();
+    fileOpenSize--;
+    return true;
+}
+
+// Ìí¼ÓÄ³Ò»Ïî
+int FileOpenList::addItem(int offset, int flags, int mode, int id)
+{
+    int i = getFreeItem();
+    if(i == -1)
+        return -1;
+    FileOpenItem t(offset, flags, mode, id);
+    fileOpenList[i] = t;
+    fileOpenSize++;
+    return i; // ·µ»ØÏµÍ³ÎÄ¼ş´ò¿ª±íµÄÏÂ±ê
+}
+
+// »ñÈ¡¿ÕÏĞ¿é
+int FileOpenList::getFreeItem()
+{
+    for(int i = 0; i < MAX_FDS; i++)
+        if(fileOpenList[i].getLink() == 0)
+            return i;
+    return -1;
+}
+
+// »ñÈ¡Ä³Ò»ÏîµÄinode±àºÅ
+int FileOpenList::getItemINode(int id)
+{
+    if(fileOpenList[id].getLink() == 0)
+        return -1;
+    else
+        return fileOpenList[id].getId();
+}
+
+//ÏÔÊ¾ĞÅÏ¢
+void FileOpenList::show()
+{
+    cout << "\n¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª\n";
+    for(int i = 0; i < fileOpenCapacity; i++)
+        if(fileOpenList[i].getLink() != 0)
+        {
+            fileOpenList[i].show();
+            cout << endl;
+        }
+    cout << "\n¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª\n";
+}
+
+
+UserOpenItem::UserOpenItem(){}
+
+UserOpenItem::UserOpenItem(int descriptor, int id)
+: descriptor(descriptor)
+, id(id){}
+// Çå¿Õ
+void UserOpenItem::clear()
+{
+    descriptor = id = -1;
+}
+// ÉèÖÃÖµ
+void UserOpenItem::set(int descriptor, int id)
+{
+    this->descriptor = descriptor;
+    this->id = id;
+}
+// »ñÈ¡ÃèÊö·û
+int UserOpenItem::getDescriptor()
+{
+    return descriptor;
+}
+// »ñÈ¡id
+int UserOpenItem::getId()
+{
+    return id;
+}
+// ¼ì²éÊÇ·ñ¿ÉÓÃ
+bool UserOpenItem::check()
+{
+    if(descriptor < 0)
+        return false;
+    return true;
+}
+
+
+UserOpenList::UserOpenList(){}
+// ¸³Öµ¹¹Ôìº¯Êı
+UserOpenList::UserOpenList(string username)
+        : username(username){}
+// Çå¿Õ
+void UserOpenList::clear()
+{
+    username = "";
+    for(int i = 0; i < MAX_USER_FD; i++)
+        iNodeToFile[i].clear();
+}
+// »ñÈ¡ÏµÍ³ÎÄ¼ş´ò¿ª±íÏÂ±ê
+int UserOpenList::getFileId(int iNodeId)
+{
+    int id = searchId(iNodeId);
+    if(id == -1)
+        return -1;
+    return iNodeToFile[id].getId();
+}
+//Ñ°ÕÒÏÂ±ê
+int UserOpenList::searchId(int iNodeId)
+{
+    for(int i = 0; i < MAX_USER_FD; i++)
+        if(iNodeToFile[i].getDescriptor() == iNodeId)
+            return i;
+    return -1;
+}
+// Ñ°ÕÒ¿ÕÏĞÏÂ±ê
+int UserOpenList::searchFreeItem()
+{
+    for(int i = 0; i < MAX_USER_FD; i++)
+        if(iNodeToFile[i].check() == false)
+            return i;
+    return -1;
+}
+// Ìí¼ÓÒ»¸öÏî
+bool UserOpenList::addItem(int iNodeId, int fileId)
+{
+    int id = searchFreeItem();
+    if(id == -1)
+        return false;
+    UserOpenItem t(iNodeId, fileId);
+    iNodeToFile[id] = t;
+    return true;
+}
+// É¾³ıÒ»¸öÏî
+bool UserOpenList::deleteItem(int iNodeId)
+{
+    int id = searchId(iNodeId);
+    if(id == -1)
+        return false;
+    iNodeToFile[id].clear();
+    return true;
 }

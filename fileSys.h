@@ -8,7 +8,6 @@
 #include "user.h"
 #include "help.h"
 
-
 #ifndef OS_FILESYS_H
 #define OS_FILESYS_H
 
@@ -28,7 +27,7 @@ public:
     //其他待补充！！！
     //为创建文件分配一个i结点
 
-    void createFile(const string& fileName);
+    void createFile(const string& fileName, Directory* cur_dir);
 
 };
 
@@ -36,6 +35,8 @@ class fileSystem{
 public:
     //超级块
     SuperBlock superBlock;
+    // 用户列表
+    Users users;
     //创建文件
     void fileCreate(const string& fileName);
     //保存所有i结点，在用户退出的时候调用以保存所有的i结点信息

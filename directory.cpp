@@ -3,7 +3,7 @@
 //
 #include "directory.h"
 using namespace std;
-Directory* current_dir;
+
 
 Directory::Directory(){}
 

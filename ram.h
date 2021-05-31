@@ -68,6 +68,8 @@ public:
     void icrLink();
     // 减少链接
     void dcrLink();
+    // 显示信息
+    void show();
 };
 
 // 系统文件打开表
@@ -97,6 +99,8 @@ public:
     int getItemINode(int id);
     // 获取空闲块
     int getFreeItem();
+    // 显示信息
+    void show();
 };
 
 class UserOpenItem{
@@ -143,58 +147,6 @@ public:
     int searchFreeItem();
 };
 
-UserOpenList::UserOpenList(){}
-// 赋值构造函数
-UserOpenList::UserOpenList(string username)
-: username(username){}
-// 清空
-void UserOpenList::clear()
-{
-    username = "";
-    for(int i = 0; i < MAX_USER_FD; i++)
-        iNodeToFile[i].clear();
-}
-// 获取系统文件打开表下标
-int UserOpenList::getFileId(int iNodeId)
-{
-    int id = searchId(iNodeId);
-    if(id == -1)
-        return -1;
-    return iNodeToFile[id].getId();
-}
-//寻找下标
-int UserOpenList::searchId(int iNodeId)
-{
-    for(int i = 0; i < MAX_USER_FD; i++)
-        if(iNodeToFile[i].getDescriptor() == iNodeId)
-            return i;
-    return -1;
-}
-// 寻找空闲下标
-int UserOpenList::searchFreeItem()
-{
-    for(int i = 0; i < MAX_USER_FD; i++)
-        if(iNodeToFile[i].check() == false)
-            return i;
-    return -1;
-}
-// 添加一个项
-bool UserOpenList::addItem(int iNodeId, int fileId)
-{
-    int id = searchFreeItem();
-    if(id == -1)
-        return false;
-    UserOpenItem t(iNodeId, fileId);
-    iNodeToFile[id] = t;
-}
-// 删除一个项
-bool UserOpenList::deleteItem(int iNodeId)
-{
-    int id = searchId(iNodeId);
-    if(id == -1)
-        return false;
-    iNodeToFile[id].clear();
-    return true;
-}
+
 
 #endif //OS_RAM_H

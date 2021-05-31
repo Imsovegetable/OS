@@ -5,7 +5,8 @@
 #include "fileSys.h"
 #include "inode.h"
 
-void SuperBlock::createFile(const string& fileName)
+// 创建文件
+void SuperBlock::createFile(const string& fileName, Directory* cur_dir)
 {
     //为新建的文件开辟一个空闲的i结点
     int i = iNodeList.getFreeInodeNum();
@@ -15,27 +16,41 @@ void SuperBlock::createFile(const string& fileName)
         return;
     }
     //为当前的目录的map添加文件的键值对
-    current_dir->addItem(fileName, i);
+    cur_dir->addItem(fileName, i);
     //写入内存表中
-    INode newInode(0, getcurrentTime(), getcurrentTime(), current_user->username);
+    INode newInode(0, getcurrentTime(), getcurrentTime(), current_user);
     if(iNodeList.addNewINode(newInode, i))
     {
         free_inode--;
     }
 }
 
+/*
+ *
+ *
+********************************************************************************************************************
+ *
+ *
+*/
+
+
+//创建文件
 void fileSystem::fileCreate(const string& fileName)
 {
     //遍历current_dir的所有指向的文件的i结点，查找是否已经有当前这个文件名了,如果有输出错误
-    if(current_dir->checkItem(fileName))
+    Directory* cur_dir = users.getCurDir();
+    if(cur_dir != nullptr)
+    if(cur_dir->checkItem(fileName))
     {
         cout << "the file '" << fileName << "' has already existed\n";
         return ;
     }
-    superBlock.createFile(fileName);
+    superBlock.createFile(fileName, cur_dir);
 }
 
-void fileSystem::saveInodeInfo() {
+// 存储i结点信息
+void fileSystem::saveInodeInfo()
+{
     //将所有i结点的信息写到txt中作为记录，在每次用户退出登录之后要进行函数调用来存储
     ofstream file("inodesInfo.txt");
     if(!file.is_open()){
@@ -67,7 +82,9 @@ void fileSystem::saveInodeInfo() {
     file.close();
 }
 
-void fileSystem::readInodeInfo() {
+//读取i结点信息
+void fileSystem::readInodeInfo()
+{
     //将所有txt中的信息读到i结点中作为记录，在每次用户登录之后都要进行函数调用来存储
     ifstream file("inodesInfo.txt");
     if(!file.is_open()){

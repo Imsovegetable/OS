@@ -4,21 +4,17 @@
 #include "gcm.h"
 #include "directory.h"
 #include "help.h"
-#include "fileSys.h"
-#include "user.h"
-#include "inode.h"
+#include "ram.h"
 
 using namespace std;
 
 int main()
 {
-    fileSystem sys;
-    int a = sys.superBlock.iNodeList.getFreeInodeNum();
-    INode A(1, getcurrentTime(), getcurrentTime(), "cyhdsb");
-    sys.superBlock.iNodeList.inodeList[a] = A;
-    iNodeDistributeList[a] = true;
-    //INode B(1, getcurrentTime(), getcurrentTime(), "cyhdsb");
-    sys.saveInodeInfo();
+
+	return 0;
+}
+
+
 //    MixIndex index;
 //    for(int i = 1; i <= 16; i++)
 //        index.addIndex(i);
@@ -55,5 +51,27 @@ int main()
 
 //    string n = "1.txt";
 //    cout << statictic(n);
-	return 0;
-}
+
+//    FileOpenList f;
+//    int j = f.addItem(0, 1, 2, 3);
+//    f.show();
+//    cout << f.size() << endl;
+//    int i = f.addItem(100, 3, 4, 5);
+//    f.addLink(i);
+//    f.show();
+//    cout << f.size() << endl;
+//    f.deleteLink(j);
+//    f.show();
+//    cout << f.size() << endl;
+
+//    UserOpenList u("cyndsb");
+//    cout << u.searchFreeItem() << endl;
+//    u.addItem(2, 4);
+//    u.addItem(88, 99);
+//    cout << u.searchId(3) << endl;
+//    cout << u.searchId(2) << endl;
+//    cout << u.getFileId(2) << endl;
+//    u.deleteItem(88);
+//    cout << u.getFileId(2) << endl;
+//    cout << u.searchFreeItem() << endl;
+//    cout << u.searchId(2) << endl;

@@ -51,6 +51,5 @@ public:
     string save_as_string_dir();
 };
 
-extern Directory* current_dir;
 
 #endif //OS_DIRECTORY_H

@@ -12,6 +12,8 @@ using namespace std;
 
 int main()
 {
+
+    cout << getLocalIpName() << endl;
     fileSystem sys;
     int a = sys.superBlock.iNodeList.getFreeInodeNum();
     INode A(1, getcurrentTime(), getcurrentTime(), "cyhdsb");
@@ -19,6 +21,10 @@ int main()
     iNodeDistributeList[a] = true;
     //INode B(1, getcurrentTime(), getcurrentTime(), "cyhdsb");
     sys.saveInodeInfo();
+    INode B(0, getcurrentTime(), getcurrentTime(), "ca");
+    sys.superBlock.iNodeList.inodeList[a] = B;
+    sys.readInodeInfo();
+    cout<<sys.superBlock.iNodeList.inodeList[0].getUser()<<endl;
 //    MixIndex index;
 //    for(int i = 1; i <= 16; i++)
 //        index.addIndex(i);

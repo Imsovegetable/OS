@@ -7,8 +7,11 @@
 
 using namespace std;
 
-extern int statictic(string filename);
+extern int statistic(string filename);
 
 extern string getcurrentTime();
+
+//获取本地电脑主机名的函数，用来最后进行菜单的显示
+extern string getLocalIpName();
 
 #endif //OS_HELP_H

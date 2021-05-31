@@ -10,6 +10,7 @@
 #ifndef OS_INODE_H
 #define OS_INODE_H
 
+//这是位示图！！！！！！！
 extern bool iNodeDistributeList[INODE_NUM];
 
 class INode{

@@ -27,8 +27,10 @@ public:
     INodeList iNodeList;
     //其他待补充！！！
     //为创建文件分配一个i结点
-
-    void createFile(const string& fileName, Directory* cur_dir);
+    //在超级块中的相关创建文件函数
+    void createFile(const string& fileName, INode& A);
+    //在超级块中的相关删除文件函数
+    void deleteFile(const string& fileName);
 
 };
 
@@ -36,12 +38,19 @@ class fileSystem{
 public:
     //超级块
     SuperBlock superBlock;
+
     // 用户列表
     Users users;
 
     INodeListInRam iNodeListInRam;
     //创建文件
     void fileCreate(const string& fileName);
+    //删除文件
+    void fileDelete(const string& fileName);
+    //创建目录
+    void directoryCreate(const string& directoryName);
+    //删除目录
+    void directoryDelete(const string& directoryName);
     //保存所有i结点，在用户退出的时候调用以保存所有的i结点信息
     void saveInodeInfo();
     //读取所有i结点的信息，在用户登录之后调用以读取所以的i结点信息

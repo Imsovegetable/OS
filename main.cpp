@@ -16,7 +16,7 @@ void printTitle()
     string path = "";
     if(current_user == "")
     {
-        cout << "$\\>";
+        cout << "$/>";
         return;
     }
     else
@@ -26,6 +26,7 @@ void printTitle()
         string name;
         int pid;
         cur_dir = fileSys.users.getCurDir();
+        Directory* t = cur_dir;
         id = cur_dir->getItem(".");
         pid = cur_dir->getItem("..");
         cur_dir = fileSys.returnToParent();
@@ -38,8 +39,9 @@ void printTitle()
             cur_dir = fileSys.returnToParent();
         }
         name = fileSys.superBlock.iNodeList.getInode(pid).dir.getFileName(id);
-        path = "\\" + name + "\\" + path;
+        path = "/" + name + "/" + path;
         cout << "$" << path << ">";
+        fileSys.users.setCurDir(t);
         return;
     }
 }
@@ -47,26 +49,24 @@ void printTitle()
 int main()
 {
     fileSys.init();
-    fileSys.users.createUser("cyndsb", "cyndsb");
-//    printTitle();
-    fileSys.users.login("cyndsb", "cyndsb");
-//    cout << endl;
-
-//    cout << current_user << endl;
-    int i = fileSys.createUserDirectory("cyndsb");
-//    cout << fileSys.superBlock.iNodeList.getInode(i).getUser() << endl;
+    fileSys.users.createUser("cynsb", "cynsb");
+    fileSys.users.login("cynsb", "cynsb");
+    int i = fileSys.createUserDirectory("cynsb");
     fileSys.users.setCurDir(&(fileSys.superBlock.iNodeList.getInode(i).dir));
-//    printTitle();
     fileSys.directoryCreate("111");
-    fileSys.fileCreate("cynddsb");
-    fileSys.fileDelete("cynddsb");
-    fileSys.directoryDelete("111");
-    fileSys.writeFile("cynndsb", "cyhnzsgdsb");
+    fileSys.fileCreate("cyndsb");
+    printTitle();
 
-    cout << fileSys.superBlock.iNodeList.iNodeSize << endl;
-    for(int j=0; j<fileSys.superBlock.iNodeList.iNodeSize; j++){
-        fileSys.superBlock.iNodeList.getSpecificInodeInfo(j);
-    }
+    cout << fileSys.users.getCurDir()->getItem(".") << endl;
+//    fileSys.fileCreate("cynddsb");
+//    fileSys.fileDelete("cynddsb");
+//    fileSys.directoryDelete("");
+//    fileSys.writeFile("cynndsb", "cyhnzsgdsb");
+//
+//    cout << fileSys.superBlock.iNodeList.iNodeSize << endl;
+//    for(int j=0; j<fileSys.superBlock.iNodeList.iNodeSize; j++){
+//        fileSys.superBlock.iNodeList.getSpecificInodeInfo(j);
+//    }
 
 	return 0;
 }

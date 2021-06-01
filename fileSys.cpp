@@ -124,7 +124,7 @@ void SuperBlock::deleteDirectory(const string& directoryName, INode& dir, Direct
 }
 
 //超级块中创建目录的函数
-void SuperBlock::createDirectory(const string &directoryName, INode &dir, Directory& directory, int pos) {
+void SuperBlock::createDirectory(const string &directoryName, INode &dir, Directory* directory, int pos) {
     /*
      * 在超级块中创建目录函数需要更新当前目录的map,更新外存i节点表,以及更新位示图
      * */
@@ -134,7 +134,8 @@ void SuperBlock::createDirectory(const string &directoryName, INode &dir, Direct
     // 更新外存的i结点表
     iNodeList.inodeList[pos] = dir;
     // 更新键值对
-    directory.addItem(directoryName, pos);
+    directory->addItem(directoryName, pos);
+//    cout << directory->getItem("..")<< endl;
 
 }
 
@@ -202,11 +203,13 @@ void fileSystem::directoryCreate(const string &directoryName) {
     INode newInode(1, getcurrentTime(), getcurrentTime(), current_user);
     //在directory进行init，设置当前目录的父目录和自身
     newInode.dir.init(cur_id, parent_id);
+//    cout << cur_id << " " << parent_id << endl;
     //调用superBlock中的创建
     if(superBlock.iNodeList.getInode(parent_id).inodeIsAuthor(current_user)){
         //调用超级块superblock中的create函数
-        superBlock.createDirectory(directoryName, newInode, *users.getCurDir(), pos);
+        superBlock.createDirectory(directoryName, newInode, users.getCurDir(), pos);
     }
+    //cout << superBlock.iNodeList.getInode(cur_id).dir.getItem(".") << endl;
     users.setCurDir(&(superBlock.iNodeList.getInode(cur_id).dir));
 }
 
@@ -555,4 +558,41 @@ void fileSystem::init()
     createRootDirectory();
 }
 // 输出文件路径
+
+void fileSystem::cd(string directoryName)
+{
+    int id = users.getCurDir()->getItem(directoryName);
+    if(id == -1)
+    {
+        cout << "no such directory\n";
+        return;
+    }
+    users.setCurDir(&(superBlock.iNodeList.getInode(id).dir));
+}
+
+//文件系统格式化
+void fileSystem::formatFileSystem() {
+    /*
+     * 文件系统的格式化包括，重置外存保存用户，重置外存i结点表，重置内存i结点表
+     * */
+    superBlock.iNodeList.iNodeSize = 0;
+    current_user = "";
+    //重置位示图
+    for(bool & i : iNodeDistributeList){
+        i = false;
+    }
+    //重置外存i结点表
+    for(int i=0; i<superBlock.iNodeList.inodeList->size(); i++){
+        superBlock.iNodeList.inodeList[i].freeBlock();
+    }
+    //重置用户表
+    for(auto & i : users.userList){
+        i.clear();
+    }
+    //重置内存i结点表
+    for(int i=0; i<users.userList.size(); i++){
+        iNodeListInRam.freeNode(i);
+    }
+}
+
 

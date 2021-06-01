@@ -38,7 +38,7 @@ public:
     //在超级块中的相关删除文件函数
     void deleteFile(const string& fileName, Directory& directory);
     //超级块中创建目录函数
-    void createDirectory(const string &directoryName, INode &dir, Directory& directory, int pos);
+    void createDirectory(const string &directoryName, INode &dir, Directory* directory, int pos);
     //超级块中删除目录函数
     void deleteDirectory(const string& directoryName, INode& dir, Directory& directory, int pos);
     // 创建目录和文件的i结点的总体函数
@@ -94,6 +94,9 @@ public:
 
     void init();
 
+    void cd(string filename);
+
+    void formatFileSystem();
 };
 
 extern fileSystem fileSys;

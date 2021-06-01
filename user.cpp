@@ -54,6 +54,15 @@ void User::loginOut()
     state = false;
 }
 
+// 删除对应用户
+void User::clear() {
+    cur_dir = nullptr;
+    username = "";
+    password = "";
+    state = false;
+}
+
+
 //计算文件大小
 int Users::calculateFileSize(const string& filename)
 {

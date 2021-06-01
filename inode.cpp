@@ -160,7 +160,7 @@ INode& INodeList::getInode(int id)
 //显示所有i结点的信息
 void INodeList::getSpecificInodeInfo(int pos) {
     //type == 0表示该i结点为一个文件， type == 1表示该i结点为一个目录
-    cout << "the relevant info are as above:" << endl;
+    cout << "the relevant info are as below:" << endl;
     cout << "the size of inode is " << inodeList[pos].size() << endl;
     cout << "the type of inode is" << inodeList[pos].getType() << endl;
 //    if(inodeList[pos].getType() == 0){

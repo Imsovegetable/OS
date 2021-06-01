@@ -42,6 +42,8 @@ public:
     bool check();
     // 登出
     void loginOut();
+
+    void clear();
 };
 
 extern string current_user;

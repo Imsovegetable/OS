@@ -19,7 +19,7 @@ Directory& Directory::operator=(const Directory & ano)
 // 添加一个目录项
 bool Directory::addItem(string filename, int id)
 {
-    if(directory[filename] != 0)
+    if(directory.find(filename) != directory.end())
         return false;
     else
         directory[filename] = id;
@@ -29,7 +29,7 @@ bool Directory::addItem(string filename, int id)
 // 删除一个目录项
 bool Directory::deleteItem(string filename)
 {
-    if(directory[filename] == 0)
+    if(directory.find(filename) == directory.end())
         return false;
     else
         directory.erase(filename);
@@ -44,13 +44,13 @@ void Directory::clear()
 // 检查某一个目录项是否存在
 bool Directory::checkItem(string filename)
 {
-    return directory[filename] != 0;
+    return directory.find(filename) != directory.end();
 }
 
 // 获取某个目录项的i结点号
 int Directory::getItem(string filename)
 {
-    if(directory[filename] == 0)
+    if(directory.find(filename) == directory.end())
         return -1;
     else
         return directory[filename];
@@ -59,7 +59,7 @@ int Directory::getItem(string filename)
 // 目录项重命名
 bool Directory::setFileName(string filename, string newName)
 {
-    if(directory[filename] == 0 || directory[newName] != 0)
+    if(directory.find(filename) == directory.end() || directory.find(newName) != directory.end())
         return false;
     else
     {

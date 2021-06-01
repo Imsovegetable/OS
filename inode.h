@@ -81,10 +81,9 @@ public:
 
 //i结点表，存储在内存中
 class INodeList{
-private:
+public:
     // 已使用的i结点数量
     int iNodeSize = 0;
-public:
     //i结点表，在初次进入程序之后获取i结点表
     INode inodeList[INODE_NUM];
     //获取空i结点号码

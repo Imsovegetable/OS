@@ -11,22 +11,12 @@
 
 using namespace std;
 
-fileSystem fileSystem;
-
-int main()
-{
-
-
-	return 0;
-}
-
-
 void printTitle()
 {
     string path = "";
     if(current_user == "")
     {
-        cout << "[/]$:";
+        cout << "$\\>";
         return;
     }
     else
@@ -48,10 +38,33 @@ void printTitle()
             cur_dir = fileSys.returnToParent();
         }
         name = fileSys.superBlock.iNodeList.getInode(pid).dir.getFileName(id);
-        path = "/" + name + "/" + path;
-        cout << "[" << path << "]$:";
+        path = "\\" + name + "\\" + path;
+        cout << "$" << path << ">";
         return;
     }
 }
+
+int main()
+{
+    fileSys.init();
+    fileSys.users.createUser("cyndsb", "cyndsb");
+//    printTitle();
+    fileSys.users.login("cyndsb", "cyndsb");
+//    cout << endl;
+
+//    cout << current_user << endl;
+    int i = fileSys.createUserDirectory("cyndsb");
+//    cout << fileSys.superBlock.iNodeList.getInode(i).getUser() << endl;
+    fileSys.users.setCurDir(&(fileSys.superBlock.iNodeList.getInode(i).dir));
+//    printTitle();
+    fileSys.directoryCreate("111");
+    fileSys.fileCreate("cynddsb");
+    cout << fileSys.superBlock.iNodeList.iNodeSize << endl;
+
+	return 0;
+}
+
+
+
 
 

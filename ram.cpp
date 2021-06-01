@@ -298,6 +298,7 @@ bool UserOpenItem::check()
 }
 
 
+
 UserOpenList::UserOpenList(){}
 // 赋值构造函数
 UserOpenList::UserOpenList(string username)
@@ -369,5 +370,12 @@ int UserOpenList::count(int iNodeId)
         if(iNodeToFile[i].getDescriptor() == iNodeId)
             count++;
     return count;
+}
+
+void UserOpenList::show()
+{
+    for(int i = 0; i < MAX_USER_FD; i++)
+        if(iNodeToFile[i].getDescriptor() != -1 && iNodeToFile[i].getId() != -1)
+            cout << iNodeToFile[i].getDescriptor() << " " << iNodeToFile[i].getId() << endl;
 }
 

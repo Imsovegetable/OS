@@ -55,9 +55,18 @@ int main()
     fileSys.users.setCurDir(&(fileSys.superBlock.iNodeList.getInode(i).dir));
     fileSys.directoryCreate("111");
     fileSys.fileCreate("cyndsb");
-    printTitle();
+    fileSys.openFile("cyndsb", 0, 1);
+//    fileSys.userOpenList["cynsb"].show();
+    fileSys.writeFile("cyndsb", "test12345");
+    fileSys.writeFile("cyndsb", "cyndsb");
+//    cout << fileSys.iNodeListInRam.getNode(fileSys.users.getCurDir()->getItem("cyndsb")).content << endl;
+ //   fileSys.fileOpenList.setOffset(fileSys.userOpenList["cynsb"].getFileId(fileSys.users.getCurDir()->getItem("cyndsb"), 1), 0);
+    fileSys.fileOpenList.setOffset(fileSys.userOpenList["cynsb"].getFileId(fileSys.users.getCurDir()->getItem("cyndsb"), 2), 0);
+    cout << fileSys.readFile("cyndsb", 5);
 
-    cout << fileSys.users.getCurDir()->getItem(".") << endl;
+//    fileSys.userOpenList["cynsb"].show();
+
+//    cout << fileSys.users.getCurDir()->getItem(".") << endl;
 //    fileSys.fileCreate("cynddsb");
 //    fileSys.fileDelete("cynddsb");
 //    fileSys.directoryDelete("");

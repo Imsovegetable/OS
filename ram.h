@@ -159,6 +159,8 @@ public:
     string getUserName();
     // 计算某个文件打开了几次
     int count(int iNodeId);
+    //
+    void show();
 };
 
 

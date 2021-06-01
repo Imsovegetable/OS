@@ -59,7 +59,14 @@ int main()
 //    printTitle();
     fileSys.directoryCreate("111");
     fileSys.fileCreate("cynddsb");
+    fileSys.fileDelete("cynddsb");
+    fileSys.directoryDelete("111");
+    fileSys.writeFile("cynndsb", "cyhnzsgdsb");
+
     cout << fileSys.superBlock.iNodeList.iNodeSize << endl;
+    for(int j=0; j<fileSys.superBlock.iNodeList.iNodeSize; j++){
+        fileSys.superBlock.iNodeList.getSpecificInodeInfo(j);
+    }
 
 	return 0;
 }

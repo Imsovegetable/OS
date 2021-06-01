@@ -60,7 +60,7 @@ void fileSystem::fileCreate(const string& fileName)
             return ;
         }
     superBlock.createFile(fileName, cur_dir);
-    //openFile(fileName, 0, 1);
+    openFile(fileName, 0, 1);
 }
 
 
@@ -94,7 +94,7 @@ void fileSystem::fileDelete(const string &fileName) {
      * */
     int pos = -1;
     pos = users.getCurDir()->getItem(fileName);
-    //pos是对应文件在内存中的i结点表中的位置
+    //pos是对应文件在外存中的i结点表中的位置
     int tmp = iNodeListInRam.searchNode(pos);
     if(tmp == -1){
         cout << "the file does not exist in iNodeListRam" << endl;

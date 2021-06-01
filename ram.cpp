@@ -15,7 +15,7 @@ int INodeListInRam::getFreeNode()
 {
     for(int i = 0; i < INODET_IN_RAM; i++)
     {
-        if(iNodeList[i].check())
+        if(!iNodeList[i].check())
         {
             return i;
         }
@@ -26,8 +26,10 @@ int INodeListInRam::getFreeNode()
 bool INodeListInRam::loadNode(INode A, int id)
 {
     int i = getFreeNode();
-    if(i == -1)
+    if(i == -1){
         return false;
+    }
+        //return false;
     iNodeList[i] = A;
     iNodeNum[i] = id;
     return true;

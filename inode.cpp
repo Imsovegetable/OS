@@ -40,6 +40,7 @@ INode::INode(int type, string setTime, string updateTime, string username, int f
 INode& INode::operator=(const INode& B)
 {
     this->dir = B.dir;
+    this->type = B.type;
     this->updateTime = B.updateTime;
     this->setTime = B.setTime;
     this->diskSize = B.diskSize;
@@ -154,6 +155,31 @@ void INodeList::FreeInvalidInode(int pos) {
 INode& INodeList::getInode(int id)
 {
     return inodeList[id];
+}
+
+//显示所有i结点的信息
+void INodeList::getSpecificInodeInfo(int pos) {
+    //type == 0表示该i结点为一个文件， type == 1表示该i结点为一个目录
+    cout << "the relevant info are as above:" << endl;
+    cout << "the size of inode is " << inodeList[pos].size() << endl;
+    cout << "the type of inode is" << inodeList[pos].getType() << endl;
+//    if(inodeList[pos].getType() == 0){
+//        cout << "the inode is stored as a file" << endl;
+//    }
+//    else if (inodeList[pos].getType() == 1){
+//        cout << "the inode is stored as a directory" << endl;
+//    }
+    cout << "the inode belongs to " << inodeList[pos].getUser() << endl;
+    cout << "the length of inode is" << inodeList[pos].size() << endl;
+    cout << "the block num of inode is" << inodeList[pos].num() << endl;
+    if(inodeList[pos].getType() == 0){
+        cout << "the content of the file is: " << inodeList[pos].content << endl;
+    }
+    else if(inodeList[pos].getType() == 1){
+        cout << "the component of the directory is: " << endl;
+        inodeList[pos].dir.show();
+    }
+    cout << endl;
 }
 
 string INode::save_as_string() {

@@ -93,7 +93,7 @@ public:
     //释放一个不用的i结点
     void FreeInvalidInode(int pos);
     //获取某个i结点的信息
-    string getSpecificInodeInfo(int pos);
+    void getSpecificInodeInfo(int pos);
     //更新i结点
     void UpdateInode(int id, INode ano);
     // 获取某个i结点

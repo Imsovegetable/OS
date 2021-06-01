@@ -421,13 +421,14 @@ string fileSystem::readFile(string fileName, int len)
     int num = userOpenList[current_user].count(id);
     if(num > 1)
     {
+        getchar();
         // 选择一个进程以继续读操作
-        cout << "choose 1 from " << num << " to continue:";
+        cout << "choose a number between 1 and " << num << " to continue:";
         int n;
         cin >> n;
         if(n > num || n < 1)
             return "";
-        num = n;
+        num = n ;
     }
     // 获取该文件在系统文件打开表的下标
     int id_sys_list = userOpenList[current_user].getFileId(id, num);
@@ -435,6 +436,10 @@ string fileSystem::readFile(string fileName, int len)
         return "";
     // 获取当前偏移量
     int offset = fileOpenList.getOffset(id_sys_list);
+    cout << offset << endl;
+    // 如果偏移量超过文件长度
+    if(offset + len > iNodeListInRam.getNode(id).size())
+        len = iNodeListInRam.getNode(id).size() - offset;
     // 设置读取后的偏移量
     fileOpenList.setOffset(id, offset + len);
     // 输出读取的内容
@@ -477,6 +482,8 @@ bool fileSystem::writeFile(string fileName, string content)
     }
     // 获取文件偏移量
     int offset = fileOpenList.getOffset(id_sys_list);
+    // 更新偏移量
+    fileOpenList.setOffset(id_sys_list, offset + content.size());
     // 拼接写入后的字符串
     string in1 = iNodeListInRam.getNode(id).content.substr(0, offset);
     string in2 = iNodeListInRam.getNode(id).content.substr(offset, iNodeListInRam.getNode(id).content.size() - offset);

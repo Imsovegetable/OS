@@ -35,7 +35,6 @@ public:
     SuperBlock();
 
     void createFile(const string& fileName, Directory* cur_dir);
-
     //在超级块中的相关删除文件函数
     void deleteFile(const string& fileName, Directory& directory);
     //超级块中创建目录函数

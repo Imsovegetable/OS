@@ -10,7 +10,6 @@ fileSystem fileSys;
 SuperBlock::SuperBlock() {superGroup.init();}
 // 创建文件
 void SuperBlock::createFile(const string& fileName, Directory* cur_dir)
-
 {
     //为新建的文件开辟一个空闲的i结点
     int i = iNodeList.getFreeInodeNum();
@@ -23,6 +22,7 @@ void SuperBlock::createFile(const string& fileName, Directory* cur_dir)
     cur_dir->addItem(fileName, i);
     //更新对应i结点的位示图
     iNodeDistributeList[i] = true;
+    //
     int id = cur_dir->getItem(".");
     int n = iNodeList.getInode(id).differ();
     iNodeList.getInode(id).updateFileSize();
@@ -60,7 +60,7 @@ void fileSystem::fileCreate(const string& fileName)
             return ;
         }
     superBlock.createFile(fileName, cur_dir);
-    openFile(fileName, 0, 1);
+    //openFile(fileName, 0, 1);
 }
 
 

@@ -168,9 +168,12 @@ int Users::searchUser(string username)
 // 切换用户
 bool Users::switchUser(string username)
 {
+//    cout << username << endl;
     int i = searchUser(username);
+//    cout << "i=" << i << endl;
     if(i == -1)
         return false;
+//    cout << "check=" << userList[i].check() << endl;
     if(userList[i].check())
     {
         current_user = userList[i].getUsername();
@@ -203,4 +206,20 @@ void Users::setCurDir(Directory* dir)
     if(i == -1)
         return;
     userList[i].setCurDir(dir);
+}
+
+bool Users::check()
+{
+    for(auto& it:userList)
+    {
+        if(it.check() == true)
+            return true;
+    }
+    return false;
+}
+
+void Users::showDir()
+{
+    Directory* cur_dir = getCurDir();
+    cur_dir->show();
 }

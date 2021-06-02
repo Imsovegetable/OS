@@ -71,9 +71,9 @@ int INode::differ()
     if(type == 1)
         t = sizeof(dir) - fileLen;
     else
-        t = content.size() - fileLen;
+        t = sizeof(content) - fileLen;
     fileLen = t;
-    return t;
+    return t / BLOCK_SIZE;
 }
 // 移除一个块
 int INode::freeBlock()

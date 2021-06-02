@@ -52,7 +52,7 @@ private:
     // 超级栈中当前的组长块
     GroupLeader* curGroup;
     // 当前总共可用的空闲块
-    int groupTotalSize;
+    int groupTotalSize = TOTAL_GROUP_SIZE;
 
 public:
     // 获得一个空闲块

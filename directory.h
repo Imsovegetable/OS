@@ -40,10 +40,11 @@ public:
     // �塋笑渡�
     void show()
     {
-        cout << "\n！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！\n";
         for(auto& it: directory)
+        {
             cout << it.first << " " << it.second << endl;
-        cout << "！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！\n";
+        }
+
     }
     //資函朕村潤泣戦中議猟周倖方
     int getFileNumFromDir();

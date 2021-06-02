@@ -9,14 +9,14 @@ fileSystem fileSys;
 
 SuperBlock::SuperBlock() {superGroup.init();}
 // 创建文件
-void SuperBlock::createFile(const string& fileName, Directory* cur_dir)
+bool SuperBlock::createFile(const string& fileName, Directory* cur_dir)
 {
     //为新建的文件开辟一个空闲的i结点
     int i = iNodeList.getFreeInodeNum();
     if(i == -1)
     {
         cout << "I-nodes have been run out\n";
-        return;
+        return false;
     }
     //为当前的目录的map添加文件的键值对
     cur_dir->addItem(fileName, i);
@@ -28,7 +28,13 @@ void SuperBlock::createFile(const string& fileName, Directory* cur_dir)
     iNodeList.getInode(id).updateFileSize();
     while(n > 0)
     {
+//        cout << superGroup.size() << endl;
         int bid = superGroup.getFreeBlock();
+        if(bid == -1)
+        {
+            cout << "block has been run out\n";
+            return false;
+        }
         iNodeList.getInode(id).addBlock(bid);
         n--;
     }
@@ -45,7 +51,9 @@ void SuperBlock::createFile(const string& fileName, Directory* cur_dir)
     {
         free_inode--;
     }
-
+    else
+        return false;
+    return true;
 }
 
 //创建文件
@@ -54,13 +62,20 @@ void fileSystem::fileCreate(const string& fileName)
     //遍历current_dir的所有指向的文件的i结点，查找是否已经有当前这个文件名了,如果有输出错误
     Directory* cur_dir = users.getCurDir();
     if(cur_dir != nullptr)
+    {
         if(cur_dir->checkItem(fileName))
         {
             cout << "the file '" << fileName << "' has already existed\n";
             return ;
         }
-    superBlock.createFile(fileName, cur_dir);
-    openFile(fileName, 0, 1);
+        if(superBlock.createFile(fileName, cur_dir))
+        {
+            openFile(fileName, 0, 1);
+            cout << "create successfully\n";
+        }
+    }
+    else
+        cout << "you are not authenticated!\n";
 }
 
 
@@ -69,7 +84,8 @@ void SuperBlock::deleteFile(const string &fileName, Directory& directory) {
     int pos = -1;
     //当前的目录是current_dir,需要在current_dir下面获取文件名所对应外存里存的i结点编号
     pos = directory.getItem(fileName);
-    if (pos == -1) {
+    if (pos == -1)
+    {
         cout << "the file does not exist!" << endl;
         return;
     }
@@ -92,20 +108,41 @@ void fileSystem::fileDelete(const string &fileName) {
      * 将i结点位示图中的对应位置写成false
      * 为当前的目录的map删掉对应文件的键值对
      * */
-    int pos = -1;
-    pos = users.getCurDir()->getItem(fileName);
-    //pos是对应文件在外存中的i结点表中的位置
-    int tmp = iNodeListInRam.searchNode(pos);
-    if(tmp == -1){
-        cout << "the file does not exist in iNodeListRam" << endl;
+    Directory* t = users.getCurDir();
+    if(t == nullptr)
+    {
+        cout << "you are not authenticated!\n";
         return;
     }
+    int pos = -1;
+    pos = t->getItem(fileName);
+    if(pos == -1)
+    {
+        cout << "file does not exist!\n";
+        return;
+    }
+    int num = userOpenList[current_user].count(pos);
+    while(num > 0)
+    {
+        closeFileForDelete(fileName);
+        num--;
+    }
+    //pos是对应文件在外存中的i结点表中的位置
+//    int tmp = iNodeListInRam.searchNode(pos);
+//    if(tmp == -1){
+//        cout << "the file does not exist in iNodeListRam" << endl;
+//        return;
+//    }
     //检查当前用户是否有该文件的创建和删除的权限
     if(superBlock.iNodeList.getInode(pos).inodeIsAuthor(current_user)){
-        //在内存i结点表中删除对应位置的i结点
-        iNodeListInRam.freeNode(tmp);
+//        //在内存i结点表中删除对应位置的i结点
+//        iNodeListInRam.freeNode(tmp);
         //在超级块中对外存的i结点表中对应的i结点进行删除
         superBlock.deleteFile(fileName, *users.getCurDir());
+    }
+    else
+    {
+        cout << "you are not authenticated!\n";
     }
 }
 
@@ -191,10 +228,17 @@ void fileSystem::directoryCreate(const string &directoryName) {
      * */
     //parent_id表示上层目录文件夹i结点的id
     int parent_id;
-    parent_id = users.getCurDir()->getItem(".");
+    Directory* t = users.getCurDir();
+    if(t == nullptr)
+    {
+        cout << "you are not authenticated!\n";
+        return;
+    }
+    parent_id =t->getItem(".");
     //获取空闲的i结点
     int pos = superBlock.iNodeList.getFreeInodeNum();
-    if(pos == -1){
+    if(pos == -1)
+    {
         cout << "the inodes has run out!" << endl;
         return ;
     }
@@ -209,6 +253,11 @@ void fileSystem::directoryCreate(const string &directoryName) {
         //调用超级块superblock中的create函数
         superBlock.createDirectory(directoryName, newInode, users.getCurDir(), pos);
     }
+    else
+    {
+        cout << "you are not authenticated!\n";
+        return;
+    }
     //cout << superBlock.iNodeList.getInode(cur_id).dir.getItem(".") << endl;
     users.setCurDir(&(superBlock.iNodeList.getInode(cur_id).dir));
 }
@@ -220,6 +269,12 @@ void fileSystem::directoryDelete(const string &directoryName) {
      * 在外存的i结点表更新位示图对应的结点，更新i结点表删除对应i结点，另外再在当前的目录的map下删除需要删除的目录
      * */
     //pos存储对应目录i结点在外存i结点表的编号
+    Directory* t = users.getCurDir();
+    if(t == nullptr)
+    {
+        cout << "you are not authenticated!\n";
+        return;
+    }
     int pos = -1;
     pos = users.getCurDir()->getItem(directoryName);
     if(pos == -1){
@@ -322,11 +377,21 @@ bool fileSystem::openFile(string fileName, int sign, int mode)
 {
     // 获取当前目录
     Directory* dir = users.getCurDir();
+    if(dir == nullptr)
+    {
+        cout << "you are not authenticated!\n";
+        return false;
+    }
     // 获取要打开文件的inode下标
     int id = dir->getItem(fileName);
     // 不存在该文件
     if(id == -1)
         return false;
+    if(superBlock.iNodeList.getInode(id).getType() == 1)
+    {
+        cd(fileName);
+        return true;
+    }
     // 获取要打开文件的内存i结点表下标
     int id_ram = iNodeListInRam.searchNode(id);
     // 该i结点未存入内存i节点表
@@ -336,8 +401,10 @@ bool fileSystem::openFile(string fileName, int sign, int mode)
         if(!iNodeListInRam.loadNode(superBlock.iNodeList.getInode(id), id))
             return false;
     }
+//    cout << current_user << endl;
     if(userOpenList[current_user].getFileId(id) != -1)
     {
+
         cout << "do you want to open it separately? [Y/N]:";
         char c;
         cin >> c;
@@ -370,47 +437,126 @@ bool fileSystem::openFile(string fileName, int sign, int mode)
     {
         return false;
     }
+    cout << "open successfully\n";
     return true;
 }
 
 // 关闭文件
-//bool fileSystem::closeFile(string fileName)
-//{
-//    // 获取当前目录
-//    Directory* dir = users.getCurDir();
-//    // 获取要关闭文件的inode下标
-//    int id = dir->getItem(fileName);
-//    if(id == -1)
-//        return false;
-//    // 获取该文件在系统打开表中的下标
-//    int id_sys_list = userOpenList[current_user].getFileId(id);
-//    // 在用户打开表中删除这一项
-//    userOpenList[current_user].deleteItem(id);
-//    // 在系统文件打开表中删除引用，如果引用项只有一个，则删除该项
-//    bool sign1 = fileOpenList.deleteLink(id_sys_list);
-//    bool sign;
-//    if(sign1)
-//    {
-//        // 如果引用项只有一个，则删除该项后还需要删除内存i结点表的引用
-//        sign = iNodeListInRam.getNode(id).delLink();
-//        if (sign)
-//        {
-//            // 如果内存i结点表的引用只有这一个，则释放该结点
-//            INode t = iNodeListInRam.freeNode(id);
-//            superBlock.iNodeList.UpdateInode(id, t);
-//        }
-//    }
-//    return true;
-//}
+bool fileSystem::closeFileForDelete(string fileName)
+{
+    // 获取当前目录
+    Directory* dir = users.getCurDir();
+    if(dir == nullptr)
+    {
+        cout << "you are not authenticated!\n";
+        return false;
+    }
+    // 获取要关闭文件的inode下标
+    int id = dir->getItem(fileName);
+    if(id == -1)
+        return false;
+    // 获取该文件在系统打开表中的下标
+    int id_sys_list = userOpenList[current_user].getFileId(id);
+    // 在用户打开表中删除这一项
+    userOpenList[current_user].deleteItem(id);
+    // 在系统文件打开表中删除引用，如果引用项只有一个，则删除该项
+    bool sign1 = fileOpenList.deleteLink(id_sys_list);
+    bool sign;
+    if(sign1)
+    {
+        // 如果引用项只有一个，则删除该项后还需要删除内存i结点表的引用
+        sign = iNodeListInRam.getNode(id).delLink();
+        if (sign)
+        {
+            // 如果内存i结点表的引用只有这一个，则释放该结点
+            INode t = iNodeListInRam.freeNode(id);
+            superBlock.iNodeList.UpdateInode(id, t);
+        }
+    }
+    return true;
+}
 
+// 关闭文件
+bool fileSystem::closeFile(string fileName)
+{
+    // 获取当前目录
+    Directory* dir = users.getCurDir();
+    if(dir == nullptr)
+    {
+        cout << "you are not authenticated!\n";
+        return false;
+    }
+    // 获取要关闭文件的inode下标
+    int id = dir->getItem(fileName);
+    if(id == -1)
+        return false;
+    int num = userOpenList[current_user].count(id);
+    if(num > 1)
+    {
+        cout << "choose a number between 1 and " << num << " to continue:";
+        int n;
+        cin >> n;
+        if(n > num || n < 1)
+            num = 1;
+        num = n ;
+    }
+    // 获取该文件在系统打开表中的下标
+    int id_sys_list = userOpenList[current_user].getFileId(id, num);
+    // 在用户打开表中删除这一项
+    userOpenList[current_user].deleteItem(id);
+    // 在系统文件打开表中删除引用，如果引用项只有一个，则删除该项
+    bool sign1 = fileOpenList.deleteLink(id_sys_list);
+    bool sign;
+    if(sign1)
+    {
+        // 如果引用项只有一个，则删除该项后还需要删除内存i结点表的引用
+        sign = iNodeListInRam.getNode(id).delLink();
+        if (sign)
+        {
+            // 如果内存i结点表的引用只有这一个，则释放该结点
+            INode t = iNodeListInRam.freeNode(id);
+            superBlock.iNodeList.UpdateInode(id, t);
+        }
+    }
+    cout << "close successfully\n";
+    return true;
+}
+
+void fileSystem::showDir()
+{
+    Directory* curDir = users.getCurDir();
+    if(curDir == nullptr)
+    {
+        cout << "you are not authenticated!\n";
+        return;
+    }
+    for(int i=0; i<curDir->size(); i++){
+        string fileName = curDir->getFileName(i);
+        int inodeId = curDir->getItem(fileName);
+        cout << fileName << "   " << superBlock.iNodeList.inodeList[inodeId].getUser() << "   ";
+        if(superBlock.iNodeList.inodeList[inodeId].getType() == 1){
+            cout << "file" << "   " << endl;
+        }
+        else{
+            cout << "directory" << "   " << endl;
+        }
+    }
+}
 
 // 读取文件
 string fileSystem::readFile(string fileName, int len)
 {
     // 获取当前目录
     Directory* dir = users.getCurDir();
+    if(dir == nullptr)
+    {
+        cout << "you are not authenticated!\n";
+        return "";
+    }
     // 获取要读取文件的inode下标
     int id = dir->getItem(fileName);
+    if(id == -1)
+        return "";
     //验证权限
     if(superBlock.iNodeList.getInode(id).getUser() != current_user)
     {
@@ -421,13 +567,12 @@ string fileSystem::readFile(string fileName, int len)
     int num = userOpenList[current_user].count(id);
     if(num > 1)
     {
-        getchar();
         // 选择一个进程以继续读操作
         cout << "choose a number between 1 and " << num << " to continue:";
         int n;
         cin >> n;
         if(n > num || n < 1)
-            return "";
+            num = 1;
         num = n ;
     }
     // 获取该文件在系统文件打开表的下标
@@ -436,12 +581,12 @@ string fileSystem::readFile(string fileName, int len)
         return "";
     // 获取当前偏移量
     int offset = fileOpenList.getOffset(id_sys_list);
-    cout << offset << endl;
+//    cout << offset << endl;
     // 如果偏移量超过文件长度
-    if(offset + len > iNodeListInRam.getNode(id).size())
-        len = iNodeListInRam.getNode(id).size() - offset;
+    if(offset + len > iNodeListInRam.getNode(id).content.size())
+        len = iNodeListInRam.getNode(id).content.size() - offset;
     // 设置读取后的偏移量
-    fileOpenList.setOffset(id, offset + len);
+    fileOpenList.setOffset(id_sys_list, offset + len);
     // 输出读取的内容
     string out = iNodeListInRam.getNode(id).content.substr(offset, len);
     return out;
@@ -452,8 +597,15 @@ bool fileSystem::writeFile(string fileName, string content)
 {
     // 获取当前目录
     Directory* dir = users.getCurDir();
+    if(dir == nullptr)
+    {
+        cout << "you are not authenticated!\n";
+        return false;
+    }
     // 获取要读取文件的inode下标
     int id = dir->getItem(fileName);
+    if(id == -1)
+        return false;
     //验证权限
     if(superBlock.iNodeList.getInode(id).getUser() != current_user)
     {
@@ -467,7 +619,7 @@ bool fileSystem::writeFile(string fileName, string content)
         int n;
         cin >> n;
         if(n > num || n < 1)
-            return "";
+            num = 1;
         num = n;
     }
     // 获取系统文件打开表下标
@@ -490,11 +642,16 @@ bool fileSystem::writeFile(string fileName, string content)
     string out = in1 + content + in2;
     iNodeListInRam.getNode(id).content = out;
     // 计算大小变化
-    int n = out.size() - iNodeListInRam.getNode(id).size();
+    int n = sizeof(out) - iNodeListInRam.getNode(id).size();
     // 分配新的块
     while(n > 0)
     {
         int bid = superBlock.superGroup.getFreeBlock();
+        if(bid == -1)
+        {
+            cout << "block has been run out\n";
+            return false;
+        }
         iNodeListInRam.getNode(id).addBlock(bid);
         n--;
     }
@@ -545,7 +702,7 @@ int fileSystem::createUserDirectory(string username)
     //cur_id表示当前目录i结点的id
     int cur_id = pos;
     //判断当前用户是否有创建和删除目录的权限
-    INode newInode(1, getcurrentTime(), getcurrentTime(), current_user);
+    INode newInode(1, getcurrentTime(), getcurrentTime(), username);
     //在directory进行init，设置当前目录的父目录和自身
     newInode.dir.init(cur_id, parent_id);
 
@@ -563,12 +720,24 @@ int fileSystem::createUserDirectory(string username)
 void fileSystem::init()
 {
     createRootDirectory();
+    users.createUser("user", "user");
+    users.createUser("sakura", "sakura");
+    int i = createUserDirectory("user");
+    int j = createUserDirectory("sakura");
+    users.userList[0].setCurDir(&(superBlock.iNodeList.getInode(i).dir));
+    users.userList[1].setCurDir(&(superBlock.iNodeList.getInode(j).dir));
 }
 // 输出文件路径
 
 void fileSystem::cd(string directoryName)
 {
-    int id = users.getCurDir()->getItem(directoryName);
+    Directory* t = users.getCurDir();
+    if(t == nullptr)
+    {
+        cout << "you are not authenticated!\n";
+        return;
+    }
+    int id = t->getItem(directoryName);
     if(id == -1)
     {
         cout << "no such directory\n";

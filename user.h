@@ -76,6 +76,10 @@ public:
     Directory* getCurDir();
     // 设置当前目录
     void setCurDir(Directory* dir);
+    //
+    bool check();
+    //
+    void showDir();
 };
 
 

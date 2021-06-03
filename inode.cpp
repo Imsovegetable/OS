@@ -199,15 +199,19 @@ void INodeList::getSpecificInodeInfo(int pos) {
 }
 
 string INode::save_as_string() {
-    string ans;
-    ans = username + '\n' + to_string(type) + '\n' + to_string(i_Nlink) + '\n' + to_string(fileLen) + '\n'
-            + to_string(diskSize) + '\n' + setTime + updateTime + '\n';
-    ans +=  (to_string(dir.size()) + '\n');
+    string ans = "";
+    ans =  username + "\n" + to_string(type) + "\n" +
+           to_string(i_Nlink) + "\n" + to_string(fileLen) + "\n"
+           + to_string(diskSize) + "\n" + setTime + updateTime;
+    //ans +=  "aaa:" + (to_string(dir.size()) + '\n');
     vector<int> tmp = indexT.getIndexes();
+//    ans += tmp.size() + "\n";
+//    ans += "\n---------------------\n";
     for(int i : tmp){
-        ans += ans + to_string(i);
+        ans += to_string(i);
         ans += '\n';
     }
+//    ans += "\n---------------------\n";
     return ans;
 }
 

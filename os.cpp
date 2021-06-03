@@ -205,6 +205,12 @@ void OS::run()
         {
             help();
         }
+        else if(cmd == "save"){
+            fileSys.saveInodeInfo();
+        }
+        else if(cmd == "readInfo"){
+            fileSys.readInodeInfo();
+        }
     }
 }
 

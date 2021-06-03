@@ -204,13 +204,13 @@ string INode::save_as_string() {
            to_string(i_Nlink) + "\n" + to_string(fileLen) + "\n"
            + to_string(diskSize) + "\n" + setTime + updateTime;
     //ans +=  "aaa:" + (to_string(dir.size()) + '\n');
-    vector<int> tmp = indexT.getIndexes();
+//    vector<int> tmp = indexT.getIndexes();
 //    ans += tmp.size() + "\n";
 //    ans += "\n---------------------\n";
-    for(int i : tmp){
-        ans += to_string(i);
-        ans += '\n';
-    }
+//    for(int i : tmp){
+//        ans += to_string(i);
+//        ans += '\n';
+//    }
 //    ans += "\n---------------------\n";
     return ans;
 }

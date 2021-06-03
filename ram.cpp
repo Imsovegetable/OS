@@ -32,6 +32,7 @@ bool INodeListInRam::loadNode(INode A, int id)
         //return false;
     iNodeList[i] = A;
     iNodeNum[i] = id;
+    iNodeListSize++;
     return true;
 }
 // 释放一个i结点
@@ -45,6 +46,7 @@ INode INodeListInRam::freeNode(int id)
     iNodeList[i].clear();
     iNodeNum[i] = -1;
     fileLock[i] = 0;
+    iNodeListSize--;
     return t;
 }
 INode& INodeListInRam::getNode(int id)

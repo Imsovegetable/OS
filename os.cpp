@@ -162,7 +162,7 @@ void OS::run()
             fileSys.users.switchUser(username);
 //            cout << current_user << endl;
         }
-        else if(cmd == "copy") // 复制
+        else if(cmd == "justcopy") // 复制
         {
             string filename;
             cin >> filename;
@@ -191,7 +191,7 @@ void OS::run()
             cin >> filename >> offset;
             fileSys.fSeek(filename, offset);
         }
-        else if(cmd == "show") // 显示文件信息
+        else if(cmd == "showindex") // 显示文件信息
         {
             string filename;
             cin >> filename;
@@ -205,11 +205,31 @@ void OS::run()
         {
             help();
         }
-        else if(cmd == "save"){
+        else if(cmd == "save") // 保存
+        {
             fileSys.saveInodeInfo();
         }
-        else if(cmd == "readInfo"){
+        else if(cmd == "readInfo") // 读取
+        {
             fileSys.readInodeInfo();
+        }
+        else if(cmd == "copy") // 复制到当前目录另一文件
+        {
+            string filename, newName;
+            cin >> filename >> newName;
+            fileSys.copy2(filename, newName);
+        }
+        else if(cmd == "show")
+        {
+            string filename;
+            cin >> filename;
+            fileSys.show(filename);
+        }
+        else if(cmd == "add")
+        {
+            string filename, newName;
+            cin >> filename >> newName;
+            fileSys.add(filename, newName);
         }
     }
 }
@@ -222,8 +242,10 @@ void OS::help()
     cout << "open\tfilename\t\t\t打开文件\n";           cout << "close\tfilename\t\t\t关闭文件\n";
     cout << "read\tfilename\tlength\t\t读取文件\n";   cout << "write\tfilename\tcontent\t\t写入文件\n";
     cout << "delete\tfilename\t\t\t删除文件\n";         cout << "format\t\t\t\t\t格式化\n";
-    cout << "cl\tusername\t\t\t切换用户\n";             cout << "copy\tfilename\t\t\t复制\n";
+    cout << "cl\tusername\t\t\t切换用户\n";             cout << "justcopy\tfilename\t\t\t复制\n";
     cout << "paste\t\t\t\t\t粘贴\n";                     cout << "cut\tfilename\t\t\t剪切\n";
     cout << "rename\tfilename\tnewname\t\t重命名\n";  cout << "fseek\toffset\t\t\t\t重定位\n";
-    cout << "show\tfilename\t\t\t显示文件信息\n";        cout << "exit\t\t\t\t\t退出\n";
+    cout << "show\tfilename\t\t\t显示文件内容\n";        cout << "showindex\tfilename\t\t\t显示文件使用块信息\n";
+    cout << "exit\t\t\t\t\t退出\n";
+    cout << "add\tfilename\tnewname\t\t追加文件内容\n";  cout << "copy\tfilename\tnewname\t\t复制文件内容\n";
 }

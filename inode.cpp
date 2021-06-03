@@ -5,6 +5,9 @@
 #include "inode.h"
 using namespace std;
 
+INode cache;
+string cacheFilename;
+
 //模拟i结点的位示图，用来分配的时候查看i结点的空闲情况
 bool iNodeDistributeList[INODE_NUM];
 

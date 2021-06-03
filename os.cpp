@@ -165,5 +165,15 @@ void OS::run()
             fileSys.users.switchUser(username);
 //            cout << current_user << endl;
         }
+        else if(cmd == "copy")
+        {
+            string filename;
+            cin >> filename;
+            fileSys.copy(filename);
+        }
+        else if(cmd == "paste")
+        {
+            fileSys.paste();
+        }
     }
 }

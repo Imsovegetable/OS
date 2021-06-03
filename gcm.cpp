@@ -122,8 +122,10 @@ void SuperGroup::init()
 // �塋笑渡�
 void SuperGroup::show()
 {
-    cout << "\n！！！！！！！！！！！！！！！！！！！！！！！！！！\n";
+    int i;
+//    cout << "\n！！！！！！！！！！！！！！！！！！！！！！！！！！\n";
     cout << "輝念階雫媚否楚葎" << curGroup->size() << endl;
-    cout << "資函匯倖腎椀翠翠催葎" << getFreeBlock() << endl;
-    cout << "\n！！！！！！！！！！！！！！！！！！！！！！！！！！\n";
+    cout << "媚競腎椀翠翠催葎" << (i = getFreeBlock()) << endl;
+    addNewBlock(i);
+//    cout << "\n！！！！！！！！！！！！！！！！！！！！！！！！！！\n";
 }

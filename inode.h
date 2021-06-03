@@ -100,4 +100,7 @@ public:
     INode& getInode(int id);
 };
 
+extern INode cache;
+extern string cacheFilename;
+
 #endif //OS_INODE_H

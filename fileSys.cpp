@@ -195,6 +195,7 @@ void fileSystem::saveInodeInfo() {
         cout<<"inodesInfo.txt can not open in saveInodeInfo function "<<endl;
         exit(0);
     }
+//    cout<<"hahaha";
     //首先存储位示图，根据位示图的值来判断是否有对应的i结点
     for(bool i : iNodeDistributeList){
         file<<i<<endl;
@@ -203,11 +204,11 @@ void fileSystem::saveInodeInfo() {
         //如果位示图的是true，代表i结点存在
         if(iNodeDistributeList[i]){
             //存储i结点的一些公共属性以及索引编号
-            file << superBlock.iNodeList.inodeList->save_as_string();
+            file << superBlock.iNodeList.inodeList[i].save_as_string();
             if(superBlock.iNodeList.inodeList[i].getType() == 1){
                 //如果i结点是目录类型
                 //如果是目录需要存储对应的目录下面的文件标识
-                file<<superBlock.iNodeList.inodeList[i].dir.getFileNumFromDir()<<endl;
+                file<<to_string(superBlock.iNodeList.inodeList[i].dir.getFileNumFromDir())<<endl;
                 file<<superBlock.iNodeList.inodeList[i].dir.save_as_string_dir();
             }
             else if(superBlock.iNodeList.inodeList[i].getType() == 0) {
@@ -217,6 +218,7 @@ void fileSystem::saveInodeInfo() {
             }
         }
     }
+    cout << "save successfully !" << endl;
     file.close();
 }
 
@@ -300,6 +302,7 @@ void fileSystem::readInodeInfo() {
         cout << "inodeInfo.txt can not open in readInodeInfo function" << endl;
         return ;
     }
+    cout << "readinfo this" << endl;
     string line;
     //读取位示图
     for(bool & i : iNodeDistributeList){
@@ -315,24 +318,39 @@ void fileSystem::readInodeInfo() {
             string username, setTime, updateTime;
             int type, i_Nlink, fileLen, diskSize;
             //如果位示图对应结点值为true，此时可以进行读取结点信息
-            file >> username;
-            file >> type;
-            file >> i_Nlink;
-            file >> fileLen;
-            file >> diskSize;
-            file >> setTime;
-            file >> updateTime;
-            file >> line;
+            if(i != 0){
+                file >> username;
+            }
+            cout << username << "fuck o" << endl;
+            getline(file, line);
+            type = atoi(line.c_str());
+            cout << type << endl;
+            getline(file, line);
+            i_Nlink = atoi(line.c_str());
+            cout << i_Nlink << endl;
+            getline(file, line);
+            fileLen = atoi(line.c_str());
+            cout << fileLen << endl;
+            getline(file, line);
+            diskSize = atoi(line.c_str());
+            cout << diskSize << endl;
+            getline(file, setTime);
+//            getline(file, setTime);
+            getline(file, updateTime);
+            cout << setTime << endl;
+            cout << updateTime << endl;
+            getline(file, line);
             //添加一个新的i结点
             INode A(type, setTime, updateTime, username, fileLen, diskSize, i_Nlink);
             superBlock.iNodeList.inodeList[i] = A;
             int dirSize = atoi(line.c_str());
+            cout << "dirsize is:" << dirSize<<endl;
             //这一行之前已经存储完了inode的所有基础元素
             //diskSet是暂时存储所有磁盘编号的数组
             vector<int> diskSet;
-            while(dirSize--){
+            while(diskSize--){
                 //如果dirsize不是0，代表该文件/目录占磁盘块
-                file >> line;
+                getline(file, line);
                 int s = 0;
                 //记录每个文件/目录对应的索引块，首先读入一个字符串，然后对字符串中处理成对应的数字存储到i结点的索引数组中
                 for(char j : line){
@@ -349,14 +367,14 @@ void fileSystem::readInodeInfo() {
 
             if(type == 1){
                 //i结点对应的type值为1代表i结点存储的是目录类型
-                file >> line;
+                getline(file, line);
                 //numFromDir获取目录对应的存储文件的文件数量
                 int numFromDir = atoi(line.c_str());
                 while(numFromDir--){
                     //按照计算出的文件数量进行获取文件的map索引
-                    file >> line;
+                    getline(file, line);
                     string key = line;
-                    file >> line;
+                    getline(file, line);
                     string value = line;
                     int val = atoi(value.c_str());
                     //存储对应的文件目录
@@ -365,13 +383,14 @@ void fileSystem::readInodeInfo() {
             }
             else if(type == 0){
                 //如果i结点的type值为0代表i结点存储的是文件类型，则下一步是读取对应的文件内容
-                file >> superBlock.iNodeList.inodeList[i].content;
+                getline(file, superBlock.iNodeList.inodeList[i].content);
             }
         }
 
     }
-
+    // cout << "read successfully" << endl;
 }
+
 
 // 打开文件, sign = 0表示从头读取，sign = 1表示追加, mode = 0表示读, mode = 1表示写
 bool fileSystem::openFile(string fileName, int sign, int mode)

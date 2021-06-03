@@ -18,6 +18,12 @@ bool SuperBlock::createFile(const string& fileName, Directory* cur_dir)
         cout << "I-nodes have been run out\n";
         return false;
     }
+    int idd = cur_dir->getItem(".");
+    if(!iNodeList.getInode(idd).inodeIsAuthor(current_user))
+    {
+        cout << "you are not authenticated!\n";
+        return false;
+    }
     //为当前的目录的map添加文件的键值对
     cur_dir->addItem(fileName, i);
     //更新对应i结点的位示图
@@ -25,7 +31,6 @@ bool SuperBlock::createFile(const string& fileName, Directory* cur_dir)
     //
     int id = cur_dir->getItem(".");
     int n = iNodeList.getInode(id).differ();
-    cout << "n=" << n;
     iNodeList.getInode(id).updateFileSize();
     while(n > 0)
     {
@@ -73,6 +78,7 @@ void fileSystem::fileCreate(const string& fileName)
         {
             openFile(fileName, 0, 1);
             cout << "create successfully\n";
+            return;
         }
     }
     else
@@ -302,7 +308,7 @@ void fileSystem::readInodeInfo() {
         cout << "inodeInfo.txt can not open in readInodeInfo function" << endl;
         return ;
     }
-    cout << "readinfo this" << endl;
+//    cout << "readinfo this" << endl;
     string line;
     //读取位示图
     for(bool & i : iNodeDistributeList){
@@ -321,74 +327,89 @@ void fileSystem::readInodeInfo() {
             if(i != 0){
                 file >> username;
             }
-            cout << username << "fuck o" << endl;
-            getline(file, line);
+            cout << username << " is user name" << endl;
+            file >> line;
             type = atoi(line.c_str());
-            cout << type << endl;
-            getline(file, line);
+            cout << type << " is type" << endl;
+            file >> line;;
             i_Nlink = atoi(line.c_str());
-            cout << i_Nlink << endl;
-            getline(file, line);
+            cout << i_Nlink << " is ilink" << endl;
+            file >> line;
             fileLen = atoi(line.c_str());
-            cout << fileLen << endl;
-            getline(file, line);
+            cout << fileLen << " is filelen" << endl;
+            file >> line;
             diskSize = atoi(line.c_str());
-            cout << diskSize << endl;
+            cout << diskSize << " is disksize" << endl;
+//            file >> line;
+//            setTime = line;
+//            file >> line;
+//            updateTime = line;
             getline(file, setTime);
-//            getline(file, setTime);
+            getline(file, setTime);
             getline(file, updateTime);
-            cout << setTime << endl;
-            cout << updateTime << endl;
-            getline(file, line);
+            cout << setTime <<" is settime " << endl;
+            cout << updateTime << " is updatetime" << endl;
             //添加一个新的i结点
             INode A(type, setTime, updateTime, username, fileLen, diskSize, i_Nlink);
             superBlock.iNodeList.inodeList[i] = A;
-            int dirSize = atoi(line.c_str());
-            cout << "dirsize is:" << dirSize<<endl;
-            //这一行之前已经存储完了inode的所有基础元素
-            //diskSet是暂时存储所有磁盘编号的数组
-            vector<int> diskSet;
-            while(diskSize--){
-                //如果dirsize不是0，代表该文件/目录占磁盘块
-                getline(file, line);
-                int s = 0;
-                //记录每个文件/目录对应的索引块，首先读入一个字符串，然后对字符串中处理成对应的数字存储到i结点的索引数组中
-                for(char j : line){
-                    if(j >= '0' && j <= '9'){
-                        s = s*10 + j - '0';
-                    }
-                    else if(line[j])
-                        //计算出对应inode存储的磁盘块的编号，然后写入索引表中
-                        diskSet.push_back(s), s=0;
+            superBlock.iNodeList.iNodeSize++;
+            int dirSize;
+            //先读的是磁盘块大小，如果磁盘块大小为0，则代表下一个读的是目录的目录项大小
+            if(diskSize > 0){
+                //diskSet是暂时存储所有磁盘编号的数组
+//                vector<int> diskSet;
+                while(diskSize--){
+                    int id = superBlock.superGroup.getFreeBlock();
+                    superBlock.iNodeList.getInode(id).addBlock(id);
+//                    cout<<"run disksize" << endl;
+                    //如果dirsize不是0，代表该文件/目录占磁盘块
+//                    file >> line;
+//                    int s = atoi(line.c_str());
+//                    diskSet.push_back(s);
+//                    cout << "run disksize" << endl;
+//                    //记录每个文件/目录对应的索引块，首先读入一个字符串，然后对字符串中处理成对应的数字存储到i结点的索引数组中
+//                    for(char j : line){
+//                        if(j >= '0' && j <= '9'){
+//                            s = s*10 + j - '0';
+//                        }
+//                        else if(line[j])
+//                            //计算出对应inode存储的磁盘块的编号，然后写入索引表中
+//                            diskSet.push_back(s), s=0;
+//                    }
                 }
+                //把diskSet存储到i结点对应的磁盘索引中
+//                superBlock.iNodeList.inodeList[i].saveDiskNumber(diskSet);
             }
-            //把diskSet存储到i结点对应的磁盘索引中
-            superBlock.iNodeList.inodeList[i].saveDiskNumber(diskSet);
+//            cout << "run context " << endl;
 
+            //这一行之前已经存储完了inode的所有基础元素
             if(type == 1){
-                //i结点对应的type值为1代表i结点存储的是目录类型
-                getline(file, line);
-                //numFromDir获取目录对应的存储文件的文件数量
-                int numFromDir = atoi(line.c_str());
-                while(numFromDir--){
+                file >> line;
+                dirSize = atoi(line.c_str());
+                cout << "dirsize is: " << dirSize<<endl;
+//                //i结点对应的type值为1代表i结点存储的是目录类型
+//                getline(file, line);
+//                //numFromDir获取目录对应的存储文件的文件数量
+//                int numFromDir = atoi(line.c_str());
+                while(dirSize--){
                     //按照计算出的文件数量进行获取文件的map索引
-                    getline(file, line);
+                    file >> line;
                     string key = line;
-                    getline(file, line);
+                    file >> line;
                     string value = line;
                     int val = atoi(value.c_str());
                     //存储对应的文件目录
-                    superBlock.iNodeList.inodeList[i].dir.addItem(key, val);
+                    superBlock.iNodeList.getInode(i).dir.addItem(key, val);
                 }
             }
-            else if(type == 0){
+            else if(type == 0)
+            {
                 //如果i结点的type值为0代表i结点存储的是文件类型，则下一步是读取对应的文件内容
-                getline(file, superBlock.iNodeList.inodeList[i].content);
+                getline(file, superBlock.iNodeList.getInode(i).content);
             }
         }
 
     }
-    // cout << "read successfully" << endl;
 }
 
 
@@ -410,6 +431,11 @@ bool fileSystem::openFile(string fileName, int sign, int mode)
         cout << "the file does not exists!\n";
         return false;
     }
+    if(!superBlock.iNodeList.getInode(id).inodeIsAuthor(current_user))
+    {
+        cout << "you are not authenticated!\n";
+        return false;
+    }
     if(superBlock.iNodeList.getInode(id).getType() == 1)
     {
         cd(fileName);
@@ -427,7 +453,6 @@ bool fileSystem::openFile(string fileName, int sign, int mode)
 //    cout << current_user << endl;
     if(userOpenList[current_user].getFileId(id) != -1)
     {
-
         cout << "do you want to open it separately? [Y/N]:";
         char c;
         cin >> c;
@@ -446,11 +471,11 @@ bool fileSystem::openFile(string fileName, int sign, int mode)
     int id_sys_list;
     // 如果要以追加模式打开
     if(sign == 1)
-        id_sys_list = fileOpenList.addItem(iNodeListInRam.getNode(id).size(), 0, mode, id);
+        id_sys_list = fileOpenList.addItem(iNodeListInRam.getNode(id).content.size(), 0, mode, id);
     else  // 从头开始读
         id_sys_list = fileOpenList.addItem(0, 0, mode, id);
     // 添加到系统文件打开表
-    if(userOpenList[current_user].getUserName() == "")
+    if(userOpenList.find(current_user) == userOpenList.end())
     {
         UserOpenList t1(current_user);
         userOpenList[current_user] = t1;
@@ -517,6 +542,11 @@ bool fileSystem::closeFile(string fileName)
     if(id == -1)
     {
         cout << "the file does not exists!\n";
+        return false;
+    }
+    if(!superBlock.iNodeList.getInode(id).inodeIsAuthor(current_user))
+    {
+        cout << "you are not authenticated!\n";
         return false;
     }
     int num = userOpenList[current_user].count(id);
@@ -589,6 +619,11 @@ void fileSystem::fileRename(string &fileName, string &newName)
         cout << "the file does not exists!\n";
         return;
     }
+    if(!superBlock.iNodeList.getInode(pos).inodeIsAuthor(current_user))
+    {
+        cout << "you are not authenticated!\n";
+        return;
+    }
     curDir->setFileName(fileName, newName);
 }
 
@@ -612,7 +647,23 @@ void fileSystem::copy(string fileName)
         cout << "file does not exists!\n";
         return;
     }
-    INode t = iNodeListInRam.getNode(id);
+    if(superBlock.iNodeList.getInode(id).getType() == 1)
+    {
+        cout << "you can not copy a directory!\n";
+        return;
+    }
+    if(!superBlock.iNodeList.getInode(id).inodeIsAuthor(current_user))
+    {
+        cout << "you are not authenticated!\n";
+        return;
+    }
+    int num = userOpenList[current_user].count(id);
+    while(num > 0)
+    {
+        closeFileForDelete(fileName);
+        num--;
+    }
+    INode t = superBlock.iNodeList.getInode(id);
     cacheFilename = fileName;
     cache = t;
 }
@@ -638,8 +689,24 @@ void fileSystem::cut(string fileName)
         cout << "file does not exists!\n";
         return;
     }
+    if(!superBlock.iNodeList.getInode(id).getType() == 1)
+    {
+        cout << "you can not cut a directory!\n";
+        return;
+    }
+    if(!superBlock.iNodeList.getInode(id).inodeIsAuthor(current_user))
+    {
+        cout << "you are not authenticated!\n";
+        return;
+    }
+    int num = userOpenList[current_user].count(id);
+    while(num > 0)
+    {
+        closeFileForDelete(fileName);
+        num--;
+    }
     // 获取内存i结点表里的i结点
-    INode t = iNodeListInRam.getNode(id);
+    INode t = superBlock.iNodeList.getInode(id);
     cacheFilename = fileName;
     cache = t;
     fileDelete(fileName);
@@ -647,14 +714,14 @@ void fileSystem::cut(string fileName)
 // 粘贴
 void fileSystem::paste()
 {
-    if(cacheFilename == "" || cache.getType() == -1){
-        cout << "no file in the clipboard\n";
-        return;
-    }
     Directory* dir = users.getCurDir();
     if(dir == nullptr)
     {
         cout << "you are not authenticated!\n";
+        return;
+    }
+    if(cacheFilename == "" || cache.getType() == -1){
+        cout << "no file in the clipboard\n";
         return;
     }
     if(dir->checkItem(cacheFilename))
@@ -662,7 +729,6 @@ void fileSystem::paste()
         cout << "the file '" << cacheFilename << "' has already existed\n";
         return ;
     }
-
     //为粘贴的文件开辟一个空闲的i结点
     int i = superBlock.iNodeList.getFreeInodeNum();
     if(i == -1)
@@ -671,6 +737,7 @@ void fileSystem::paste()
         return;
     }
     //为当前的目录的map添加文件的键值对
+
     dir->addItem(cacheFilename, i);
     //更新对应i结点的位示图
     iNodeDistributeList[i] = true;
@@ -826,13 +893,11 @@ void fileSystem::showFile(string filename)
         return;
     }
     INode t;
-    cout << iNodeListInRam.searchNode(id) << "\n";
     if(iNodeListInRam.searchNode(id) == -1)
         t = superBlock.iNodeList.getInode(id);
     else
         t = iNodeListInRam.getNode(id);
     int size = t.disksize();
-//    cout << size << " " << iNodeListInRam.getNode(id).size() << endl;
     cout << "the file " << filename << " has use " << size << " blocks\n";
     t.show();
 }
@@ -890,7 +955,7 @@ bool fileSystem::writeFile(string fileName, string content)
     string out = in1 + content + in2;
     iNodeListInRam.getNode(id).content = out;
     // 计算大小变化
-    int n = sizeof(out) - iNodeListInRam.getNode(id).size();
+    int n = (int)ceil((double)(sizeof(out) - iNodeListInRam.getNode(id).size()) / (double) BLOCK_SIZE);
     // 分配新的块
     while(n > 0)
     {

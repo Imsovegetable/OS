@@ -113,6 +113,12 @@ public:
     void fSeek(string filename, int offset);
 
     void showFile(string filename);
+
+    void copy2(string filename, string newName);
+
+    void show(string filename);
+
+    void add(string filename, string newName);
 };
 
 extern fileSystem fileSys;

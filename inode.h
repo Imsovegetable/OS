@@ -49,6 +49,8 @@ public:
     void updateFileSize();
     // 返回文件大小
     int size() const;
+
+    int disksize();
     // 返回文件变化情况
     int differ();
     // 移除一个块
@@ -61,6 +63,8 @@ public:
     string getUser();
     // 清空inode
     void clear();
+
+    void show();
 
     void addLink();
 

@@ -56,6 +56,19 @@ int Directory::getItem(string filename)
         return directory[filename];
 }
 
+string Directory::getFileNameFromMap(int pos) {
+    int cnt = 0;
+    for(auto &it : directory){
+        if(cnt == pos){
+            return it.first;
+        }
+        else{
+            cnt++;
+        }
+    }
+    return "";
+}
+
 // 目录项重命名
 bool Directory::setFileName(string filename, string newName)
 {

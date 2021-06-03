@@ -493,7 +493,7 @@ bool fileSystem::closeFile(string fileName)
     int num = userOpenList[current_user].count(id);
     if(num > 1)
     {
-        cout << "choose a number between 1 and " << num << " to continue:";
+        cout << "choose a process to continue[1-" << num <<"]:";
         int n;
         cin >> n;
         if(n > num || n < 1)
@@ -534,7 +534,8 @@ void fileSystem::showDir()
         string fileName = curDir->getFileName(i);
         int inodeId = curDir->getItem(fileName);
         cout << fileName << "   " << superBlock.iNodeList.inodeList[inodeId].getUser() << "   ";
-        if(superBlock.iNodeList.inodeList[inodeId].getType() == 1){
+        if(superBlock.iNodeList.inodeList[inodeId].getType() == 1)
+        {
             cout << "file" << "   " << endl;
         }
         else{
@@ -542,6 +543,100 @@ void fileSystem::showDir()
         }
     }
 }
+void fileSystem::fileRename(string &fileName, string &newName)
+{
+    Directory* curDir = users.getCurDir();
+    if(curDir == nullptr)
+    {
+        cout << "you are not authenticated!\n";
+        return;
+    }
+    int pos = curDir->getItem(fileName);
+    if(pos == -1)
+    {
+        cout << "the file does not exists!\n";
+        return;
+    }
+    curDir->setFileName(fileName, newName);
+}
+
+
+void fileSystem::copy(string fileName)
+{
+    Directory* dir = users.getCurDir();
+    if(dir == nullptr)
+    {
+        cout << "you are not authenticated!\n";
+        return;
+    }
+    int id = dir->getItem(fileName);
+    if(id == -1)
+    {
+        cout << "file does not exists!\n";
+        return;
+    }
+    INode t = iNodeListInRam.getNode(id);
+    cacheFilename = fileName;
+    cache = t;
+}
+
+void fileSystem::paste()
+{
+    Directory* dir = users.getCurDir();
+    if(dir == nullptr)
+    {
+        cout << "you are not authenticated!\n";
+        return;
+    }
+    if(dir->checkItem(cacheFilename))
+    {
+        cout << "the file '" << cacheFilename << "' has already existed\n";
+        return ;
+    }
+
+    //为粘贴的文件开辟一个空闲的i结点
+    int i = superBlock.iNodeList.getFreeInodeNum();
+    if(i == -1)
+    {
+        cout << "I-nodes have been run out\n";
+        return;
+    }
+    //为当前的目录的map添加文件的键值对
+    dir->addItem(cacheFilename, i);
+    //更新对应i结点的位示图
+    iNodeDistributeList[i] = true;
+    //
+    int id = dir->getItem(".");
+    int n = superBlock.iNodeList.getInode(id).differ();
+    superBlock.iNodeList.getInode(id).updateFileSize();
+    while(n > 0)
+    {
+        int bid = superBlock.superGroup.getFreeBlock();
+        if(bid == -1)
+        {
+            cout << "block has been run out\n";
+            return;
+        }
+        superBlock.iNodeList.getInode(id).addBlock(bid);
+        n--;
+    }
+    // 回收多余的块
+    while(n < 0)
+    {
+        int bid = superBlock.iNodeList.getInode(id).freeBlock();
+        superBlock.superGroup.addNewBlock(bid);
+        n++;
+    }
+    //写入内存表中
+    if(superBlock.iNodeList.addNewINode(cache, i))
+    {
+        superBlock.free_inode--;
+    }
+//    cout << cache.content << endl;
+    openFile(cacheFilename, 0, 1);
+    cout << "paste successfully\n";
+}
+
 
 // 读取文件
 string fileSystem::readFile(string fileName, int len)
@@ -568,7 +663,7 @@ string fileSystem::readFile(string fileName, int len)
     if(num > 1)
     {
         // 选择一个进程以继续读操作
-        cout << "choose a number between 1 and " << num << " to continue:";
+        cout << "choose a process to continue[1-" << num <<"]:";
         int n;
         cin >> n;
         if(n > num || n < 1)
@@ -615,7 +710,7 @@ bool fileSystem::writeFile(string fileName, string content)
     int num = userOpenList[current_user].count(id);
     if(num > 1)
     {
-        cout << "choose 1 from " << num << " to continue:";
+        cout << "choose a process to continue[1-" << num <<"]:";
         int n;
         cin >> n;
         if(n > num || n < 1)

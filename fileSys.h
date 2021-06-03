@@ -101,6 +101,12 @@ public:
     void showDir();
 
     bool closeFileForDelete(string fileName);
+
+    void copy(string fileName);
+
+    void paste();
+
+    void fileRename(string &fileName, string &newName);
 };
 
 extern fileSystem fileSys;

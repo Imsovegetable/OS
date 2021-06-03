@@ -17,9 +17,9 @@ int main()
 //    fileSys.users.login("cynsb", "cynsb");
 //    fileSys.users.setCurDir(&(fileSys.superBlock.iNodeList.getInode(i).dir));
 //
-////    fileSys.directoryCreate("111");
+//    fileSys.directoryCreate("111");
 //    fileSys.fileCreate("cyndsb");
-////    fileSys.openFile("cyndsb", 0, 1);
+//    fileSys.openFile("cyndsb", 0, 1);
 //    fileSys.writeFile("cyndsb", "test12345");
 //    fileSys.users.login("294559", "294559");
 //    fileSys.users.switchUser("294559");

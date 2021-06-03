@@ -22,6 +22,7 @@ class OS{
 public:
     void printTitle();
     void run();
+    void help();
 };
 
 extern OS os;

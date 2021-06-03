@@ -60,23 +60,31 @@ void INode::updateFileSize()
     if(type == 1)
         fileLen = sizeof(dir);
     else
-        fileLen = content.size();
+        fileLen = sizeof(content);
 }
 // 返回文件大小
 int INode::size() const
 {
     return fileLen;
 }
+int INode::disksize()
+{
+    return diskSize;
+}
 // 返回文件变化情况
 int INode::differ()
 {
     int t;
     if(type == 1)
+    {
+//        cout << "sizeof dir = " << sizeof(dir) << " filelen = " << fileLen << endl;
         t = sizeof(dir) - fileLen;
+    }
+
     else
         t = sizeof(content) - fileLen;
     fileLen = t;
-    return t / BLOCK_SIZE;
+    return (int)ceil((double)t / (double)BLOCK_SIZE);
 }
 // 移除一个块
 int INode::freeBlock()
@@ -158,6 +166,11 @@ void INodeList::FreeInvalidInode(int pos) {
 INode& INodeList::getInode(int id)
 {
     return inodeList[id];
+}
+
+void INode::show()
+{
+    indexT.show();
 }
 
 //显示所有i结点的信息

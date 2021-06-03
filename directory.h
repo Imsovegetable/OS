@@ -52,6 +52,8 @@ public:
     string save_as_string_dir();
     //返回指定id对应的文件名
     string getFileName(int id);
+
+    string getFileNameFromMap(int pos);
 };
 
 

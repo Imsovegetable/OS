@@ -25,6 +25,7 @@ bool SuperBlock::createFile(const string& fileName, Directory* cur_dir)
     //
     int id = cur_dir->getItem(".");
     int n = iNodeList.getInode(id).differ();
+    cout << "n=" << n;
     iNodeList.getInode(id).updateFileSize();
     while(n > 0)
     {
@@ -386,7 +387,10 @@ bool fileSystem::openFile(string fileName, int sign, int mode)
     int id = dir->getItem(fileName);
     // 不存在该文件
     if(id == -1)
+    {
+        cout << "the file does not exists!\n";
         return false;
+    }
     if(superBlock.iNodeList.getInode(id).getType() == 1)
     {
         cd(fileName);
@@ -454,7 +458,10 @@ bool fileSystem::closeFileForDelete(string fileName)
     // 获取要关闭文件的inode下标
     int id = dir->getItem(fileName);
     if(id == -1)
+    {
+        cout << "the file does not exists!\n";
         return false;
+    }
     // 获取该文件在系统打开表中的下标
     int id_sys_list = userOpenList[current_user].getFileId(id);
     // 在用户打开表中删除这一项
@@ -489,7 +496,10 @@ bool fileSystem::closeFile(string fileName)
     // 获取要关闭文件的inode下标
     int id = dir->getItem(fileName);
     if(id == -1)
+    {
+        cout << "the file does not exists!\n";
         return false;
+    }
     int num = userOpenList[current_user].count(id);
     if(num > 1)
     {
@@ -530,11 +540,13 @@ void fileSystem::showDir()
         cout << "you are not authenticated!\n";
         return;
     }
-    for(int i=0; i<curDir->size(); i++){
-        string fileName = curDir->getFileName(i);
+    for(int i=2; i<curDir->size(); i++){
+        string fileName = curDir->getFileNameFromMap(i);
+        if(fileName == "")
+            return;
         int inodeId = curDir->getItem(fileName);
         cout << fileName << "   " << superBlock.iNodeList.inodeList[inodeId].getUser() << "   ";
-        if(superBlock.iNodeList.inodeList[inodeId].getType() == 1)
+        if(superBlock.iNodeList.inodeList[inodeId].getType() == 0)
         {
             cout << "file" << "   " << endl;
         }
@@ -543,6 +555,7 @@ void fileSystem::showDir()
         }
     }
 }
+
 void fileSystem::fileRename(string &fileName, string &newName)
 {
     Directory* curDir = users.getCurDir();
@@ -563,6 +576,11 @@ void fileSystem::fileRename(string &fileName, string &newName)
 
 void fileSystem::copy(string fileName)
 {
+    if(cacheFilename != "" || cache.getType() != -1)
+    {
+        cout << "a file still remains in the clipboard!\n";
+        return;
+    }
     Directory* dir = users.getCurDir();
     if(dir == nullptr)
     {
@@ -579,9 +597,41 @@ void fileSystem::copy(string fileName)
     cacheFilename = fileName;
     cache = t;
 }
-
+// 剪切
+void fileSystem::cut(string fileName)
+{
+    if(cacheFilename != "" || cache.getType() != -1)
+    {
+        cout << "a file still remains in the clipboard!\n";
+        return;
+    }
+    // 获取当前目录
+    Directory* dir = users.getCurDir();
+    if(dir == nullptr)
+    {
+        cout << "you are not authenticated!\n";
+        return;
+    }
+    // 获取当前目录下的文件i结点
+    int id = dir->getItem(fileName);
+    if(id == -1)
+    {
+        cout << "file does not exists!\n";
+        return;
+    }
+    // 获取内存i结点表里的i结点
+    INode t = iNodeListInRam.getNode(id);
+    cacheFilename = fileName;
+    cache = t;
+    fileDelete(fileName);
+}
+// 粘贴
 void fileSystem::paste()
 {
+    if(cacheFilename == "" || cache.getType() == -1){
+        cout << "no file in the clipboard\n";
+        return;
+    }
     Directory* dir = users.getCurDir();
     if(dir == nullptr)
     {
@@ -635,6 +685,8 @@ void fileSystem::paste()
 //    cout << cache.content << endl;
     openFile(cacheFilename, 0, 1);
     cout << "paste successfully\n";
+    cache.clear();
+    cacheFilename = "";
 }
 
 
@@ -651,7 +703,10 @@ string fileSystem::readFile(string fileName, int len)
     // 获取要读取文件的inode下标
     int id = dir->getItem(fileName);
     if(id == -1)
+    {
+        cout << "the file does not exists!\n";
         return "";
+    }
     //验证权限
     if(superBlock.iNodeList.getInode(id).getUser() != current_user)
     {
@@ -684,7 +739,83 @@ string fileSystem::readFile(string fileName, int len)
     fileOpenList.setOffset(id_sys_list, offset + len);
     // 输出读取的内容
     string out = iNodeListInRam.getNode(id).content.substr(offset, len);
+    out += "\n";
     return out;
+}
+// 设置偏移量指针
+void fileSystem::fSeek(string filename, int offset)
+{
+    Directory* dir = users.getCurDir();
+    if(dir == nullptr)
+    {
+        cout << "you are not authenticated!\n";
+        return;
+    }
+    int id = dir->getItem(filename);
+    if(id == -1)
+    {
+        cout << "the file does not exists!\n";
+        return;
+    }
+    if(superBlock.iNodeList.getInode(id).getUser() != current_user)
+    {
+        cout << "you are not authenticated!\n";
+        return;
+    }
+    if(superBlock.iNodeList.getInode(id).getType() == 1)
+    {
+        cout << "you can not change the pointer of a directory\n";
+        return;
+    }
+    int num = userOpenList[current_user].count(id);
+    if(num > 1)
+    {
+        cout << "choose a process to continue[1-" << num <<"]:";
+        int n;
+        cin >> n;
+        if(n > num || n < 1)
+            num = 1;
+        num = n;
+    }
+    int id_sys_list = userOpenList[current_user].getFileId(id, num);
+    if(offset > iNodeListInRam.getNode(id).content.size())
+        offset = iNodeListInRam.getNode(id).content.size();
+    if(offset < 0)
+        offset = 0;
+    fileOpenList.setOffset(id_sys_list, offset);
+}
+
+void fileSystem::showFile(string filename)
+{
+    // 获取当前目录
+    Directory* dir = users.getCurDir();
+    if(dir == nullptr)
+    {
+        cout << "you are not authenticated!\n";
+        return;
+    }
+    // 获取要读取文件的inode下标
+    int id = dir->getItem(filename);
+    if(id == -1)
+    {
+        cout << "the file does not exists!\n";
+        return;
+    }
+    if(superBlock.iNodeList.getInode(id).getUser() != current_user)
+    {
+        cout << "you are not authenticated!\n";
+        return;
+    }
+    INode t;
+    cout << iNodeListInRam.searchNode(id) << "\n";
+    if(iNodeListInRam.searchNode(id) == -1)
+        t = superBlock.iNodeList.getInode(id);
+    else
+        t = iNodeListInRam.getNode(id);
+    int size = t.disksize();
+//    cout << size << " " << iNodeListInRam.getNode(id).size() << endl;
+    cout << "the file " << filename << " has use " << size << " blocks\n";
+    t.show();
 }
 
 // 写入文件
@@ -700,7 +831,10 @@ bool fileSystem::writeFile(string fileName, string content)
     // 获取要读取文件的inode下标
     int id = dir->getItem(fileName);
     if(id == -1)
+    {
+        cout << "the file does not exists!\n";
         return false;
+    }
     //验证权限
     if(superBlock.iNodeList.getInode(id).getUser() != current_user)
     {
@@ -836,6 +970,11 @@ void fileSystem::cd(string directoryName)
     if(id == -1)
     {
         cout << "no such directory\n";
+        return;
+    }
+    if(superBlock.iNodeList.getInode(id).getType() == 0)
+    {
+        cout << "you can not cd a file\n";
         return;
     }
     users.setCurDir(&(superBlock.iNodeList.getInode(id).dir));

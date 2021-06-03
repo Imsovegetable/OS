@@ -107,6 +107,12 @@ public:
     void paste();
 
     void fileRename(string &fileName, string &newName);
+
+    void cut(string fileName);
+
+    void fSeek(string filename, int offset);
+
+    void showFile(string filename);
 };
 
 extern fileSystem fileSys;

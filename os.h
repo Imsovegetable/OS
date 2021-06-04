@@ -12,6 +12,7 @@
 #include "fileSys.h"
 #include "user.h"
 #include "inode.h"
+#include "GODNING.h"
 
 using namespace std;
 

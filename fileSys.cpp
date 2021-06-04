@@ -1217,6 +1217,11 @@ void fileSystem::cd(string directoryName)
         cout << "no such directory\n";
         return;
     }
+    if(superBlock.iNodeList.getInode(id).getUser() != current_user)
+    {
+        cout << "you are not authenticated!\n";
+        return;
+    }
     if(superBlock.iNodeList.getInode(id).getType() == 0)
     {
         cout << "you can not cd a file\n";

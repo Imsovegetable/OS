@@ -20,4 +20,6 @@
 #define MAX_FDS 64  // 系统文件打开表最大数量
 #define MAX_USER_FD 5 // 用户文件打开表最大数量
 
+#define ADMINPASSWORD "administrator"
+
 #endif //OS_GODNING_H

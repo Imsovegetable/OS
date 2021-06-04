@@ -153,7 +153,13 @@ void OS::run()
         }
         else if(cmd == "format") // 格式化
         {
-            fileSys.formatFileSystem();
+            cout << "please input the admin password:";
+            string s;
+            cin >> s;
+            if(s == ADMINPASSWORD)
+                fileSys.formatFileSystem();
+            else
+                cout << "you are not authenticated!\n";
         }
         else if(cmd == "cl") // 改变登录账号
         {

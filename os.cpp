@@ -55,7 +55,24 @@ void OS::run()
 //        system("cls");
         printTitle();
         cin >> cmd;
-        if(cmd == "login") // 登录
+        if(cmd == "createUser"){
+            if(fileSys.users.userList.size() == 8){
+                cout << "no user position left" << endl;
+                return ;
+            }
+            cout << "username:";
+            string username;
+            cin >> username;
+            cout << "password:";
+            string password;
+            cin >> password;
+            fileSys.users.createUser(username, password);
+            int pos = fileSys.createUserDirectory(username);
+            int len = fileSys.users.userList.size() - 1;
+            fileSys.users.userList[len].setCurDir(&(fileSys.superBlock.iNodeList.getInode(pos).dir));
+//            cout << fileSys.users.userList[0].getUsername()<<endl;
+        }
+        else if(cmd == "login") // 登录
         {
             string username, password = "";
             cout << "username:";
@@ -215,10 +232,10 @@ void OS::run()
         {
             fileSys.saveInodeInfo();
         }
-        else if(cmd == "readInfo") // 读取
-        {
-            fileSys.readInodeInfo();
-        }
+//        else if(cmd == "readInfo") // 读取
+//        {
+//            fileSys.readInodeInfo();
+//        }
         else if(cmd == "copy") // 复制到当前目录另一文件
         {
             string filename, newName;
@@ -237,6 +254,7 @@ void OS::run()
             cin >> filename >> newName;
             fileSys.add(filename, newName);
         }
+
     }
 }
 

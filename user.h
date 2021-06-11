@@ -25,6 +25,8 @@ private:
     string password = "";
     bool state = false;
 public:
+
+
     User();
 
     User(string un, string pw, Directory* dir = nullptr);
@@ -49,10 +51,12 @@ public:
 extern string current_user;
 //把user的表读到用户数组中去
 class Users{
-private:
+public:
     int userListSize = 0;
 
-public:
+
+    int num = 0;
+
     vector<User> userList;
     //计算文件大小
     int calculateFileSize(const string& filename);

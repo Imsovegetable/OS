@@ -196,10 +196,21 @@ void SuperBlock::deleteFileAndDirectory() {
 //文件系统中的保存所有i结点信息的函数
 void fileSystem::saveInodeInfo() {
     //将所有i结点的信息写到txt中作为记录，在每次用户退出登录之后要进行函数调用来存储
+    ofstream f("user.txt");
+    if(!f.is_open()){
+        cout<<"inodesInfo.txt can not open in saveInodeInfo function "<<endl;
+        return;
+    }
+    f << users.userListSize << endl;
+    for(int i = 0; i < users.userListSize; i++)
+        f << users.userList[i].getUsername() << " " << users.userList[i].getPassword() << endl;
+    f.close();
+
     ofstream file("inodesInfo.txt");
     if(!file.is_open()){
         cout<<"inodesInfo.txt can not open in saveInodeInfo function "<<endl;
-        exit(0);
+//        exit(0);
+        return;
     }
 //    cout<<"hahaha";
     //首先存储位示图，根据位示图的值来判断是否有对应的i结点
@@ -301,7 +312,7 @@ void fileSystem::directoryDelete(const string &directoryName) {
 
 //文件系统下面的读取i结点到外存i结点表中的函数
 void fileSystem::readInodeInfo() {
-
+    createRootDirectory();
     //将所有txt中的信息读到i结点中作为记录，在每次用户登录之后都要进行函数调用来存储
     ifstream file("inodesInfo.txt");
     if(!file.is_open()){
@@ -327,19 +338,19 @@ void fileSystem::readInodeInfo() {
             if(i != 0){
                 file >> username;
             }
-            cout << username << " is user name" << endl;
+//            cout << username << " is user name" << endl;
             file >> line;
             type = atoi(line.c_str());
-            cout << type << " is type" << endl;
+//            cout << type << " is type" << endl;
             file >> line;;
             i_Nlink = atoi(line.c_str());
-            cout << i_Nlink << " is ilink" << endl;
+//            cout << i_Nlink << " is ilink" << endl;
             file >> line;
             fileLen = atoi(line.c_str());
-            cout << fileLen << " is filelen" << endl;
+//            cout << fileLen << " is filelen" << endl;
             file >> line;
             diskSize = atoi(line.c_str());
-            cout << diskSize << " is disksize" << endl;
+//            cout << diskSize << " is disksize" << endl;
 //            file >> line;
 //            setTime = line;
 //            file >> line;
@@ -347,8 +358,8 @@ void fileSystem::readInodeInfo() {
             getline(file, setTime);
             getline(file, setTime);
             getline(file, updateTime);
-            cout << setTime <<" is settime " << endl;
-            cout << updateTime << " is updatetime" << endl;
+//            cout << setTime <<" is settime " << endl;
+//            cout << updateTime << " is updatetime" << endl;
             //添加一个新的i结点
             INode A(type, setTime, updateTime, username, fileLen, diskSize, i_Nlink);
             superBlock.iNodeList.inodeList[i] = A;
@@ -386,7 +397,7 @@ void fileSystem::readInodeInfo() {
             if(type == 1){
                 file >> line;
                 dirSize = atoi(line.c_str());
-                cout << "dirsize is: " << dirSize<<endl;
+//                cout << "dirsize is: " << dirSize<<endl;
 //                //i结点对应的type值为1代表i结点存储的是目录类型
 //                getline(file, line);
 //                //numFromDir获取目录对应的存储文件的文件数量
@@ -410,6 +421,26 @@ void fileSystem::readInodeInfo() {
         }
 
     }
+    file.close();
+    string n;
+    ifstream f("user.txt");
+    f >> n;
+    for(int i = 0; i < atoi(n.c_str()); i++)
+    {
+        string username, password;
+        f >> username >> password;
+        users.createUser(username, password);
+        int id = superBlock.iNodeList.getInode(0).dir.getItem(username);
+        users.userList[i].setCurDir(&(superBlock.iNodeList.getInode(id).dir));
+    }
+    cout << "load successfully\n";
+
+//    users.createUser("user", "user");
+//    users.createUser("sakura", "sakura");
+//    int i = createUserDirectory("user");
+//    int j = createUserDirectory("sakura");
+//    users.userList[0].setCurDir(&(superBlock.iNodeList.getInode(i).dir));
+//    users.userList[1].setCurDir(&(superBlock.iNodeList.getInode(j).dir));
 }
 
 
@@ -1194,12 +1225,15 @@ int fileSystem::createUserDirectory(string username)
 void fileSystem::init()
 {
     createRootDirectory();
-    users.createUser("user", "user");
-    users.createUser("sakura", "sakura");
-    int i = createUserDirectory("user");
-    int j = createUserDirectory("sakura");
-    users.userList[0].setCurDir(&(superBlock.iNodeList.getInode(i).dir));
-    users.userList[1].setCurDir(&(superBlock.iNodeList.getInode(j).dir));
+    ofstream file("sign.txt");
+    string sign = "1";
+    file << sign;
+//    users.createUser("user", "user");
+//    users.createUser("sakura", "sakura");
+//    int i = createUserDirectory("user");
+//    int j = createUserDirectory("sakura");
+//    users.userList[0].setCurDir(&(superBlock.iNodeList.getInode(i).dir));
+//    users.userList[1].setCurDir(&(superBlock.iNodeList.getInode(j).dir));
 }
 // 输出文件路径
 
@@ -1253,6 +1287,8 @@ void fileSystem::formatFileSystem() {
     for(int i=0; i<users.userList.size(); i++){
         iNodeListInRam.freeNode(i);
     }
+
+    cout << "format successfully\n";
 }
 
 

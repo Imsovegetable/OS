@@ -124,6 +124,12 @@
 		<Unit filename="D:/os/memory.h">
 			<Option target="os"/>
 		</Unit>
+		<Unit filename="D:/os/os.cpp">
+			<Option target="os"/>
+		</Unit>
+		<Unit filename="D:/os/os.h">
+			<Option target="os"/>
+		</Unit>
 		<Unit filename="D:/os/ram.cpp">
 			<Option target="os"/>
 		</Unit>

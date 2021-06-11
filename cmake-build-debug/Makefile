@@ -330,6 +330,33 @@ memory.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\os.dir\build.make CMakeFiles/os.dir/memory.cpp.s
 .PHONY : memory.cpp.s
 
+os.obj: os.cpp.obj
+
+.PHONY : os.obj
+
+# target to build an object file
+os.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\os.dir\build.make CMakeFiles/os.dir/os.cpp.obj
+.PHONY : os.cpp.obj
+
+os.i: os.cpp.i
+
+.PHONY : os.i
+
+# target to preprocess a source file
+os.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\os.dir\build.make CMakeFiles/os.dir/os.cpp.i
+.PHONY : os.cpp.i
+
+os.s: os.cpp.s
+
+.PHONY : os.s
+
+# target to generate assembly for a file
+os.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\os.dir\build.make CMakeFiles/os.dir/os.cpp.s
+.PHONY : os.cpp.s
+
 ram.obj: ram.cpp.obj
 
 .PHONY : ram.obj
@@ -414,6 +441,9 @@ help:
 	@echo ... memory.obj
 	@echo ... memory.i
 	@echo ... memory.s
+	@echo ... os.obj
+	@echo ... os.i
+	@echo ... os.s
 	@echo ... ram.obj
 	@echo ... ram.i
 	@echo ... ram.s

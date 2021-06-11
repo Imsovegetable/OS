@@ -843,7 +843,7 @@ void fileSystem::cut(string fileName)
         cout << "file does not exists!\n";
         return;
     }
-    if(!superBlock.iNodeList.getInode(id).getType() == 1)
+    if(superBlock.iNodeList.getInode(id).getType() == 1)
     {
         cout << "you can not cut a directory!\n";
         return;
